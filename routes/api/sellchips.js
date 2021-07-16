@@ -1,13 +1,16 @@
-const { Router } = require('express');
+// const { Router } = require('express');
 //import config from '../../config';
 const jwt  =require('jsonwebtoken');
 //Support Model
+var Router = require('router')
+var router = Router()
 const SellChips = require('../../models/SellChips');
 const auth = require('../../middleware/auth');
 // import Payment from '../../models/Payment';
 // import User from '../../models/User';
-const router = Router();
+// const router = Router();
 const  JWT_SECRET  = process.env.JWT_SECRET;
+module.exports =()=>{
 router.get('/', auth, async (req, res) => {
 
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -129,4 +132,4 @@ router.get('/', auth, async (req, res) => {
 //     });
 // });
 
-module.exports = router;
+}

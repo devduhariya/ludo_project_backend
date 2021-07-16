@@ -1,21 +1,24 @@
-const { Router } =require('express');
+// const { Router } =require('express');
 const {bcrypt} = require('bcrypt');
 //import config from '../../config';
 const jwt =require('jsonwebtoken');
 //import auth from '../../middleware/auth';
 // User Model
+
 require ('dotenv').config();
+var Router = require('router')
+var router = Router()
 const User =require ('../../models/User');
 const { default: auth } = require('../../middleware/auth');
 
 const JWT_SECRET   = process.env.JWT_SECRET;
-const router = Router();
+// const router = Router();
 
 /**
  * @route   POST api/auth/login
  * @desc    Login user
  */
-
+module.exports =()=>{
 router.post('/login', async (req, res) => {
   const { ph, password } = req.body;
 
@@ -110,6 +113,6 @@ router.get('/', async (req, res) => {
   }
 });
 
+}
 
-
-module.exports = auth
+// module.exports = auth

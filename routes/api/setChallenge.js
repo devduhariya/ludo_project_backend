@@ -1,4 +1,4 @@
-const { Router } = require('express');
+// const { Router } = require('express');
 //import config from '../../config';
 const jwt = require('jsonwebtoken');
 //Support Model
@@ -7,9 +7,11 @@ const auth = require('../../middleware/auth');
 const Payment =require('../../models/Payment');
 const Result = require('../../models/GameResult');
 
-const router = Router();
+// const router = Router();
+var Router = require('router')
+var router = Router()
 const  JWT_SECRET  = process.env.JWT_SECRET;
-
+module.exports =()=>{
 router.get('/', auth, async (req, res) => {
 
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -186,4 +188,4 @@ router.put('/:id', auth, async (req, res) => {
     });
 
 });
-module.exports = router;
+}

@@ -1,17 +1,18 @@
-const { Router } = require('express');
+// const { Router } = require('express');
 //import config from '../../config';
 const jwt = require('jsonwebtoken');
 const Query =require('../../middleware/auth');
 const auth = require('../../middleware/auth')
-const router = Router();
+// const router = Router();
 const  JWT_SECRET  = process.env.JWT_SECRET;
-
+var Router = require('router')
+var router = Router()
 /**
  * @route   GET api/query
  * @desc    Get All queries
  * @access  Public
  */
-
+ module.exports =()=>{
 router.get('/', async (req, res) => {
   try {
     const query = await Query.find();
@@ -49,4 +50,4 @@ router.post('/', auth, async (req, res) => {
     }
   });
 });
-module.exports = router;
+}

@@ -1,7 +1,9 @@
-const { Router } = require('express');
+// const { Router } = require('express');
 const User = require('../../models/User');
 const auth = require('../../middleware/auth')
-const router = Router();
+// const router = Router();
+var Router = require('router')
+var router = Router()
 //import config from '../../config';
 const jwt = require('jsonwebtoken');
 const  JWT_SECRET  = process.env.JWT_SECRET;
@@ -10,6 +12,7 @@ const  JWT_SECRET  = process.env.JWT_SECRET;
  * @route   GET api/users
  * @desc    Get all users
  */
+ module.exports =()=>{
 router.get('/:id', auth, async (req, res) => {
   const id = req.params.id;
   jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -27,5 +30,4 @@ router.get('/:id', auth, async (req, res) => {
     }
   });
 });
-
-module.exports = router;
+}
