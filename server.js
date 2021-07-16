@@ -1,12 +1,12 @@
 const express = require('express');
 // import mongoose from 'mongoose';
 // import path from 'path';
-// import cors from 'cors';
+const  cors = require('cors');
 // import bodyParser from 'body-parser';
 // import morgan from 'morgan';
 
 const app = express();
-
+app.use(cors())
 app.get('/',(req,res)=>{
     res.send("app is running well")
 })
