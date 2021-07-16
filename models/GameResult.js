@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 
 // var Comments = new Schema({
@@ -59,4 +59,4 @@ const ResultSchema = new Schema({
     }
 });
 const Result = model('Result', ResultSchema);
-export default Result;
+module.exports = Result;

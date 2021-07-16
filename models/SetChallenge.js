@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const SetChallenge = new Schema({
     name: {
@@ -15,4 +15,4 @@ const SetChallenge = new Schema({
     }
 });
 const Challenge = model('Challenge', SetChallenge);
-export default Challenge;
+module.exports = Challenge;

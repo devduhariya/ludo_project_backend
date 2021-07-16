@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 // const ObjectID = require('mongodb').ObjectID;
 const paymentSchema = new Schema({
    paytm_no: {
@@ -27,7 +27,7 @@ const paymentSchema = new Schema({
    },
 });
 const Payment = model('Payment', paymentSchema);
-export default Payment;
+module.exports = Payment;
 
 
 

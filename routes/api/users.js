@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import User from '../../models/User';
-import auth from '../../middleware/auth'
+const { Router } = require('express');
+const User = require('../../models/User');
+const auth = require('../../middleware/auth')
 const router = Router();
 //import config from '../../config';
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 const  JWT_SECRET  = process.env.JWT_SECRET;
 
 /**
@@ -28,4 +28,4 @@ router.get('/:id', auth, async (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

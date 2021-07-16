@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 // const ObjectID = require('mongodb').ObjectID;
 const SellChipsSchema = new Schema({
     paytm_no: {
@@ -11,4 +11,4 @@ const SellChipsSchema = new Schema({
     }
 });
 const SellChips = model('SellChips', SellChipsSchema);
-export default SellChips;
+module.exports = SellChips;

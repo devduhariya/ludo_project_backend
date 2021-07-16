@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 // const ObjectID = require('mongodb').ObjectID;
 const SupportSchema = new Schema({
    whatsapp: {
@@ -33,4 +33,4 @@ const SupportSchema = new Schema({
    }
 });
 const Query = model('Query', SupportSchema);
-export default Query;
+module.exports = Query;

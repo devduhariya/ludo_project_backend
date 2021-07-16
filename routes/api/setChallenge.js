@@ -1,11 +1,11 @@
-import { Router } from 'express';
+const { Router } = require('express');
 //import config from '../../config';
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 //Support Model
-import Challenge from '../../models/SetChallenge';
-import auth from '../../middleware/auth';
-import Payment from '../../models/Payment';
-import Result from '../../models/GameResult';
+const Challenge = require('../../models/SetChallenge');
+const auth = require('../../middleware/auth');
+const Payment =require('../../models/Payment');
+const Result = require('../../models/GameResult');
 
 const router = Router();
 const  JWT_SECRET  = process.env.JWT_SECRET;
@@ -186,4 +186,4 @@ router.put('/:id', auth, async (req, res) => {
     });
 
 });
-export default router;
+module.exports = router;

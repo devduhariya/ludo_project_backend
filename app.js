@@ -1,20 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import express from 'express';
+import mongoose from 'mongoose';
+//import path from 'path';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+//import morgan from 'morgan';
+//import config from './config';
 
-const authRoutes = require('./routes/api/auth.js');
-const queryRoutes = require('./routes/api/query.js');
-const sellChipsRoute = require('./routes/api/sellchips.js');
-const setChallengeRoute = require('./routes/api/setChallenge.js');
-const buyChipsRoute = require('./routes/api/buyChips.js');
-
-// import authRoutes from './routes/api/auth.js';
-// //import userRoutes from './routes/api/users.js'
-// import queryRoutes from './routes/api/query.js';
-// import sellChipsRoute from './routes/api/sellchips.js'
-// import setChallengeRoute from './routes/api/setChallenge.js'
-// import buyChipsRoute from './routes/api/buyChips.js'
+// routes
+import authRoutes from './routes/api/auth.js';
+//import userRoutes from './routes/api/users.js'
+import queryRoutes from './routes/api/query.js';
+import sellChipsRoute from './routes/api/sellchips.js'
+import setChallengeRoute from './routes/api/setChallenge.js'
+import buyChipsRoute from './routes/api/buyChips.js'
 const Mongo_Url = process.env.Mongo_Url;
 
 // const path = require("path");
@@ -32,13 +30,13 @@ const db = Mongo_Url;
 
 // Connect to Mongo
 mongoose
-    .connect(db, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true
-    }) // Adding new mongo url parser
-    .then(() => console.log('MongoDB Connected...'))
-    .catch(err => console.log(err));
+  .connect(db, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+  }) // Adding new mongo url parser
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
 
 // Use Routes
 //app.use('/api/users', userRoutes);
@@ -82,5 +80,10 @@ app.listen(PORT, () => console.log(`Server started on PORT ${PORT}`));
 // });
 
 if (process.env.NODE_ENV == "production") {
-    app.use(express.static("client/build"));
+  app.use(express.static("client/build"));
 }
+
+
+
+
+module.exports = app;

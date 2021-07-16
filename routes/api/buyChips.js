@@ -1,16 +1,16 @@
 
 require('dotenv').config()
-const express = require('express')
-import jwt from 'jsonwebtoken';
+const {Router} = require('express')
+const jwt =require('jsonwebtoken');
 //import config from '../../config';
-const router = express.Router()
+const router = Router();
 const https = require('https');
-import Payment from '../../models/Payment';
+const Payment =require('../../models/Payment');
 const { default: auth } = require('../../middleware/auth')
 
 const  JWT_SECRET  = process.env.JWT_SECRET;
 
-router.get('/', auth, async (req, res) => {
+module.exports=router.get('/', auth, async (req, res) => {
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
         const Role = authData.user.role;
         const allTranctions = await Payment.find();
@@ -144,4 +144,4 @@ router.get('/', async (req, res) => {
         res.status(400).json({ msg: e.message });
     }
 });
-export default router; 
+// module.exports = router; 
