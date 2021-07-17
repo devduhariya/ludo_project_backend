@@ -134,10 +134,10 @@ module.exports = (app) => {
                     // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
                     let chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
-                    // console.log("chips",chips);
-                    // if (!chips) {
-                    //      chips = 0;
-                    // }
+                    console.log("chips",chips);
+                    if (!chips) {
+                        chips.amount = 0;
+                    }
                     if(chips.status==="Accepted"){
                          currentUserAmount = chips.amount;
                     
