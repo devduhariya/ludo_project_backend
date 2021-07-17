@@ -22,10 +22,10 @@ require('./models/SellChips');
 app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 6800
-// app.use(cors());
-app.use(cors({
-    origin: "https://ludowin.herokuapp.com"
-  }));
+app.use(cors());
+// app.use(cors({
+//     origin: "https://ludowin.herokuapp.com"
+//   }));
 
 
 
