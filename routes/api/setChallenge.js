@@ -10,7 +10,7 @@ const Result = require('../../models/GameResult');
 // const router = Router();
 var Router = require('router')
 var router = Router()
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET   = "secret";
 module.exports = (app) => {
     app.get('/api/setChallenge', auth, async (req, res) => {
 

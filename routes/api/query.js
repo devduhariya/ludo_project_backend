@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const Query =require('../../middleware/auth');
 const auth = require('../../middleware/auth')
 // const router = Router();
-const  JWT_SECRET  = process.env.JWT_SECRET;
+const JWT_SECRET   = "secret";
 // var Router = require('router')
 // var router = Router()
 /**
