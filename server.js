@@ -16,10 +16,15 @@ require('./models/Query');
 require('./models/SetChallenge');
 require('./models/SellChips');
 
+https://ludowin.herokuapp.com/
 
 app.set('trust proxy', 1);
 
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: "https://ludowin.herokuapp.com"
+  }));
 
 app.use(bodyParser.json());
 
