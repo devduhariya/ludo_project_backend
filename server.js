@@ -20,6 +20,7 @@ require('./models/SellChips');
 
 app.set('trust proxy', 1);
 
+const PORT = process.env.PORT || 6800
 // app.use(cors());
 app.use(cors({
     origin: "https://ludowin.herokuapp.com"
@@ -29,8 +30,9 @@ app.use(cors({
 
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.Mongo_Url || "Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.connect(process.env.Mongo_Url || "mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true },()=>{
+    console.log('mongodb Connected')
+});
 
 
 
@@ -48,10 +50,10 @@ app.get('/', (req, res) => {
     res.send("app is runniing at well");
 });
 
-const PORT = process.env.PORT || 9000
 
-if (process.env.NODE_ENV == "production") {
-    app.use(express.static("client/build"));
-}
+
+// if (process.env.NODE_ENV == "production") {
+//     app.use(express.static("client/build"));
+// }
 
 app.listen(PORT, () => console.log(`Server started on PORT ${PORT}`));
