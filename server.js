@@ -71,7 +71,7 @@ app.use(bodyParser.json());
 //     .catch(err => console.log(err));
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.Mongo_Url ,{ useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.Mongo_Url ,{ useNewUrlParser: true,useCreateIndex: true, useUnifiedTopology: true });
 
 // Use Routes
 //app.use('/api/users', userRoutes);
@@ -124,6 +124,8 @@ app.listen(PORT, () => console.log(`Server started on PORT ${PORT}`));
 // app.get("*", function (request, response) {
 //   response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 // });
+
+
 
 if (process.env.NODE_ENV == "production") {
     app.use(express.static("client/build"));
