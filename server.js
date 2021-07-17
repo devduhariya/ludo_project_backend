@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.Mongo_Url || "Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.set('bufferCommands', false);
 require('./routes/api/auth')(app)
 require('./routes/api/buyChips')(app)
 require('./routes/api/query')(app)
