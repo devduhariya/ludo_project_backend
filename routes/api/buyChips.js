@@ -110,6 +110,19 @@ module.exports = (app) => {
     });
 
 
+    app.delete('/api/buychips/:id', async (req, res) => {
+        const id = req.params.id;
+        const product = await Payment.findById({ _id: id })
+        if (product) {
+            await Payment.deleteOne({ _id: id });
+            res.status(200).send({ message: 'request removed' });
+        } else {
+            res.status(400).send({ message: "no request" })
+        }
+    });
+
+
+
     app.get('/api/buychips/totalchips', auth, async (req, res) => {
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {

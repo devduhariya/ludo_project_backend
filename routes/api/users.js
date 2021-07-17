@@ -2,8 +2,8 @@
 const User = require('../../models/User');
 const auth = require('../../middleware/auth')
 // const router = Router();
-var Router = require('router')
-var router = Router()
+// var Router = require('router')
+// var router = Router()
 //import config from '../../config';
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
