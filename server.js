@@ -16,7 +16,7 @@ require('./models/Query');
 require('./models/SetChallenge');
 require('./models/SellChips');
 
-https://ludowin.herokuapp.com/
+
 
 app.set('trust proxy', 1);
 
