@@ -135,9 +135,9 @@ module.exports = (app) => {
                     let chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
                     // console.log("chips",chips);
-                    if (!chips) {
-                        res.json({ message: "no user found with this number" })
-                    }
+                    // if (!chips) {
+                    //      chips = 0;
+                    // }
                     if(chips.status==="Accepted"){
                          currentUserAmount = chips.amount;
                     
