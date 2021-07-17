@@ -137,6 +137,7 @@ module.exports = (app) => {
 
     app.get('/api/buychips/all', async (req, res) => {
         try {
+            console.log('auth',auth)
             const query = await Payment.find();
             if (!query) throw Error('No queries');
 

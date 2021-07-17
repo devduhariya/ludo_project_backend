@@ -13,7 +13,7 @@ const  JWT_SECRET  = process.env.JWT_SECRET;
  * @access  Public
  */
  module.exports =(app)=>{
-app.get('/', async (req, res) => {
+app.get('/api/query', async (req, res) => {
   try {
     const query = await Query.find();
     if (!query) throw Error('No queries');
@@ -24,7 +24,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.post('/', auth, async (req, res) => {
+app.post('/api/query', auth, async (req, res) => {
   const { whatsapp, paytm, txn_Id, reciver_Paytm, amount, message, screenshots } = req.body;
   jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
     if (err) {

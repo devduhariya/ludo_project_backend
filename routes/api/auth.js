@@ -21,7 +21,7 @@ const JWT_SECRET   = process.env.JWT_SECRET;
  * @desc    Login user
  */
 module.exports =(app)=>{
-app.post('/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { ph, password } = req.body;
 
   try {
@@ -56,7 +56,7 @@ app.post('/login', async (req, res) => {
  * @desc    Register new user
  */
 
-app.post('/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   const { name, ph, email, password } = req.body;
   try {
     const user = await User.findOne({ ph });
@@ -104,7 +104,7 @@ app.post('/register', async (req, res) => {
  * @desc    Get user data
  */
 
-app.get('/', async (req, res) => {
+app.get('/api/auth', async (req, res) => {
   try {
     const users = await User.find();
     if (!users) throw Error('No queries');

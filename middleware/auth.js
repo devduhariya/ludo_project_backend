@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 //import config from '../config';
 
 const  JWT_SECRET  = process.env.JWT_SECRET;
-module.exports =()=>{
-const auth = (req, res, next) => {
+// module.exports =(app)=>{
+  module.exports  = (req, res, next) => {
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
@@ -18,7 +18,7 @@ const auth = (req, res, next) => {
   }
 
 }
-}
+// }
 
 
 

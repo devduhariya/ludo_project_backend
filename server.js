@@ -8,7 +8,7 @@ const app = express();
 const dotenv = require("dotenv");
 
 dotenv.config();
-
+// require('./middleware/auth')
 require('./models/User');
 require('./models/Payment');
 require('./models/GameResult');
@@ -54,7 +54,7 @@ app.use(bodyParser.json());
 //     .catch(err => console.log(err));
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.Mongo_Url || `Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.Mongo_Url ,{ useNewUrlParser: true, useUnifiedTopology: true });
 
 // Use Routes
 //app.use('/api/users', userRoutes);

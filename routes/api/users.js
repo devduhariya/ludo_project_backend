@@ -13,7 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
  * @desc    Get all users
  */
 module.exports = (app) => {
-  app.get('/:id', auth, async (req, res) => {
+  app.get('/api/users/:id', auth, async (req, res) => {
     const id = req.params.id;
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
       if (err) {

@@ -11,7 +11,7 @@ const auth = require('../../middleware/auth');
 // const router = Router();
 const  JWT_SECRET  = process.env.JWT_SECRET;
 module.exports =(app)=>{
-app.get('/', auth, async (req, res) => {
+app.get('/api/sellchips', auth, async (req, res) => {
 
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
         if (err) {

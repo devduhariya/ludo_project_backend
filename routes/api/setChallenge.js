@@ -12,7 +12,7 @@ var Router = require('router')
 var router = Router()
 const JWT_SECRET = process.env.JWT_SECRET;
 module.exports = (app) => {
-    app.get('/', auth, async (req, res) => {
+    app.get('/api/setChallenge', auth, async (req, res) => {
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const name = authData.user.name;
@@ -31,7 +31,7 @@ module.exports = (app) => {
         });
     });
 
-    app.get('/all', auth, async (req, res) => {
+    app.get('/api/setChallenge/all', auth, async (req, res) => {
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             // const name = authData.user.name;
@@ -49,7 +49,7 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/', auth, async (req, res) => {
+    app.post('/api/setChallenge', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const { amount, roomCode } = req.body;
             const name = authData.user.name;
@@ -78,7 +78,7 @@ module.exports = (app) => {
         });
     });
 
-    app.get('/result', async (req, res) => {
+    app.get('/api/setChallenge/result', async (req, res) => {
         try {
             const query = await Result.find();
             if (!query) throw Error('No queries');
@@ -97,7 +97,7 @@ module.exports = (app) => {
     const Totalchips = function (a) {
         return a + a;
     }
-    app.post('/:id', auth, async (req, res) => {
+    app.post('/api/setChallenge/:id', auth, async (req, res) => {
         const id = req.params.id;
 
         //  const {screenshots} = req.body
@@ -163,7 +163,7 @@ module.exports = (app) => {
     const AddAmount = function (a, b) {
         return a + b;
     }
-    app.put('/:id', auth, async (req, res) => {
+    app.put('/api/setChallenge/:id', auth, async (req, res) => {
         const id = req.params.id;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             let user1 = authData.user.ph
