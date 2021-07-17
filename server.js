@@ -29,7 +29,12 @@ app.use(cors({
 
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.Mongo_Url || "Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.Mongo_Url || "mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
+
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => console.log("MongoDB Connected"))
+
+
+
 app.use(bodyParser.json());
 require('./routes/api/auth')(app)
 require('./routes/api/buyChips')(app)
