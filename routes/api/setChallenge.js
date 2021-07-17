@@ -49,34 +49,34 @@ module.exports = (app) => {
         });
     });
 
-    // app.post('/api/setChallenge', auth, async (req, res) => {
-    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-    //         const { amount, roomCode } = req.body;
-    //         const name = authData.user.name;
-    //         const paytm_no = authData.user.ph
-    //         // console.log("authdata.user", authData.user.ph, authData.user.name)
-    //         if (err) {
-    //             res.sendStatus(403);
-    //         } else {
-    //             let chips = await Payment.findOne({ paytm_no: authData.user.ph });
-    //             const totalchips = chips.amount;
-    //             // try {
-    //             if (totalchips > amount) {
-    //                 const newChallenge = new Challenge({
-    //                     name,
-    //                     amount,
-    //                     roomCode,
-    //                     paytm_no
-    //                 });
-    //                 const challenge = await newChallenge.save();
-    //                 if (!challenge) throw Error('Something went wrong saving the challenge');
-    //                 res.status(200).json({ challenge });
-    //             } else {
-    //                 res.status(400).json({ message: "you don't have sufficient chips" })
-    //             }
-    //         }
-    //     });
-    // });
+    app.post('/api/setChallenge', auth, async (req, res) => {
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            const { amount, roomCode } = req.body;
+            const name = authData.user.name;
+            const paytm_no = authData.user.ph
+            // console.log("authdata.user", authData.user.ph, authData.user.name)
+            if (err) {
+                res.sendStatus(403);
+            } else {
+                let chips = await Payment.findOne({ paytm_no: authData.user.ph });
+                const totalchips = chips.amount;
+                // try {
+                if (totalchips > amount) {
+                    const newChallenge = new Challenge({
+                        name,
+                        amount,
+                        roomCode,
+                        paytm_no
+                    });
+                    const challenge = await newChallenge.save();
+                    if (!challenge) throw Error('Something went wrong saving the challenge');
+                    res.status(200).json({ challenge });
+                } else {
+                    res.status(400).json({ message: "you don't have sufficient chips" })
+                }
+            }
+        });
+    });
 
     // app.get('/api/setChallenge/result', async (req, res) => {
     //     try {
