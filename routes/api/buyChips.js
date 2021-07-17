@@ -9,7 +9,7 @@ const https = require('https');
 const Payment = require('../../models/Payment');
 const auth = require('../../middleware/auth')
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET   = "secret";
 module.exports = (app) => {
     app.get('/api/buychips', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {

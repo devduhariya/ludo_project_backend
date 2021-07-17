@@ -9,7 +9,7 @@ const auth = require('../../middleware/auth');
 // import Payment from '../../models/Payment';
 // import User from '../../models/User';
 // const router = Router();
-const  JWT_SECRET  = process.env.JWT_SECRET;
+const JWT_SECRET   = "secret";
 module.exports =(app)=>{
 app.get('/api/sellchips', auth, async (req, res) => {
 
