@@ -73,8 +73,8 @@ module.exports = (app) => {
             }
         });
     });
-    const AddAmount = function (a) {
-        return a + a;
+    const AddAmount = function (a, b) {
+        return a + b;
     }
     app.put('/api/buychips/:id', async (req, res) => {
 
@@ -132,11 +132,11 @@ module.exports = (app) => {
                 try {
                     let currentUserAmount = 0
                     // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
-                    let chips = await Payment.findOne({ paytm_no: authData.user.ph }
+                    const chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
                     console.log("chips",chips);
                     if (!chips) {
-                        console.log("no chips");
+                        currentUserAmount = 0;
                     }
                     if(chips.status==="Accepted"){
                          currentUserAmount = chips.amount;
