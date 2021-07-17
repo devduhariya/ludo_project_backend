@@ -2,12 +2,25 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+var Router = require('router')
+var router = Router()
+const app = express();
+const dotenv = require("dotenv");
 
-const authRoutes = require('./routes/api/auth.js');
-const queryRoutes = require('./routes/api/query.js');
-const sellChipsRoute = require('./routes/api/sellchips.js');
-const setChallengeRoute = require('./routes/api/setChallenge.js');
-const buyChipsRoute = require('./routes/api/buyChips.js');
+dotenv.config();
+
+require('./models/User');
+require('./models/Payment');
+require('./models/GameResult');
+require('./models/Query');
+require('./models/SetChallenge');
+require('./models/SellChips');
+// const User = require('./models/User');
+// const authRoutes = require('./routes/api/auth.js');
+// const queryRoutes = require('./routes/api/query.js');
+// const sellChipsRoute = require('./routes/api/sellchips.js');
+// const setChallengeRoute = require('./routes/api/setChallenge.js');
+// const buyChipsRoute = require('./routes/api/buyChips.js');
 
 // import authRoutes from './routes/api/auth.js';
 // //import userRoutes from './routes/api/users.js'
@@ -17,8 +30,8 @@ const buyChipsRoute = require('./routes/api/buyChips.js');
 // import buyChipsRoute from './routes/api/buyChips.js'
 const Mongo_Url = process.env.Mongo_Url;
 
-// const path = require("path");
-const app = express();
+const path = require("path");
+// const app = express();
 // const path = require("path");
 // CORS Middleware
 app.use(cors());
@@ -28,30 +41,44 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // DB Config
-const db = Mongo_Url;
+// const db = Mongo_Url;
 
 // Connect to Mongo
-mongoose
-    .connect(db, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true
-    }) // Adding new mongo url parser
-    .then(() => console.log('MongoDB Connected...'))
-    .catch(err => console.log(err));
+// mongoose
+//     .connect(db, {
+//         useNewUrlParser: true,
+//         useCreateIndex: true,
+//         useUnifiedTopology: true
+//     }) // Adding new mongo url parser
+//     .then(() => console.log('MongoDB Connected...'))
+//     .catch(err => console.log(err));
+app.use(express.static(path.join(__dirname, 'build')));
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.Mongo_Url || `Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Use Routes
 //app.use('/api/users', userRoutes);
 
-app.use('/api/auth', authRoutes);
+// router.use('/api/auth', authRoutes);
+require('./routes/api/auth')(app)
+require('./routes/api/buyChips')(app)
+require('./routes/api/query')(app)
+require('./routes/api/setChallenge')(app)
+require('./routes/api/sellchips')(app)
+require('./routes/api/users')(app)
+// app.use('/api/query', queryRoutes);
 
-app.use('/api/query', queryRoutes);
+// app.use('/api/sellchips', sellChipsRoute);
 
-app.use('/api/sellchips', sellChipsRoute);
+// app.use('/api/setChallenge', setChallengeRoute);
 
-app.use('/api/setChallenge', setChallengeRoute);
+// app.use('/api/buychips', buyChipsRoute);
 
-app.use('/api/buychips', buyChipsRoute);
+
+app.get('/',(req,res)=>{
+res.send("app is runniing at 9000");
+})
+
 
 // app.use('/api/roomcode', createRoomCode);
 

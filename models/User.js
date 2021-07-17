@@ -1,5 +1,7 @@
-const { Schema, model } = require('mongoose');
-
+// const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
+// const ObjectID = require('mongodb').ObjectID;
+const { Schema } = mongoose;
 // Create Schema
 const UserSchema = new Schema({
   name: {
@@ -27,6 +29,7 @@ const UserSchema = new Schema({
     required: true
   }
 });
-const User = model('User', UserSchema);
+// const User = model('User', UserSchema);
 
-module.exports = User;
+// module.exports = User;
+mongoose.model('user', UserSchema);

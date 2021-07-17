@@ -10,8 +10,8 @@ const auth = require('../../middleware/auth');
 // import User from '../../models/User';
 // const router = Router();
 const  JWT_SECRET  = process.env.JWT_SECRET;
-module.exports =()=>{
-router.get('/', auth, async (req, res) => {
+module.exports =(app)=>{
+app.get('/', auth, async (req, res) => {
 
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
         if (err) {

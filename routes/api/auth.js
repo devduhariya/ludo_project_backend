@@ -1,15 +1,17 @@
 // const { Router } =require('express');
-const {bcrypt} = require('bcrypt');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 //import config from '../../config';
 const jwt =require('jsonwebtoken');
 //import auth from '../../middleware/auth';
 // User Model
-
+const SALT = 5;
+const User = mongoose.model('user');
 require ('dotenv').config();
 var Router = require('router')
 var router = Router()
-const User =require ('../../models/User');
-const { default: auth } = require('../../middleware/auth');
+// const User =require ('../../models/User');
+const  auth = require('../../middleware/auth');
 
 const JWT_SECRET   = process.env.JWT_SECRET;
 // const router = Router();
@@ -18,8 +20,8 @@ const JWT_SECRET   = process.env.JWT_SECRET;
  * @route   POST api/auth/login
  * @desc    Login user
  */
-module.exports =()=>{
-router.post('/login', async (req, res) => {
+module.exports =(app)=>{
+app.post('/login', async (req, res) => {
   const { ph, password } = req.body;
 
   try {
@@ -54,16 +56,16 @@ router.post('/login', async (req, res) => {
  * @desc    Register new user
  */
 
-router.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
   const { name, ph, email, password } = req.body;
   try {
     const user = await User.findOne({ ph });
     if (user) throw Error('User already exists');
 
-    const salt = await bcrypt.genSalt(10);
-    if (!salt) throw Error('Something went wrong with bcrypt');
+    // const salt = await bcrypt.genSalt(10);
+    // if (!salt) throw Error('Something went wrong with bcrypt');
 
-    const hash = await bcrypt.hash(password, salt);
+    const hash = await bcrypt.hash(password, SALT);
     if (!hash) throw Error('Something went wrong hashing the password');
 
     const newUser = new User({
@@ -102,7 +104,7 @@ router.post('/register', async (req, res) => {
  * @desc    Get user data
  */
 
-router.get('/', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
     const users = await User.find();
     if (!users) throw Error('No queries');
