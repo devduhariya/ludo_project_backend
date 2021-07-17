@@ -30,7 +30,7 @@ app.use(cors({
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.Mongo_Url || "Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.set('bufferCommands', false);
+
 
 
 
