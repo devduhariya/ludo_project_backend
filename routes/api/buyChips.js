@@ -110,6 +110,19 @@ module.exports = (app) => {
     });
 
 
+    app.delete('/api/buychips/:id', async (req, res) => {
+        const id = req.params.id;
+        const product = await Payment.findById({ _id: id })
+        if (product) {
+            await Payment.deleteOne({ _id: id });
+            res.status(200).send({ message: 'request removed' });
+        } else {
+            res.status(400).send({ message: "no request" })
+        }
+    });
+
+
+
     app.get('/api/buychips/totalchips', auth, async (req, res) => {
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -117,17 +130,22 @@ module.exports = (app) => {
                 res.sendStatus(403);
             } else {
                 try {
+                    let currentUserAmount = 0
                     // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
                     let chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
                     // console.log("chips",chips);
-                    const currentUserAmount = chips.amount;
                     if (!chips) {
                         res.json({ message: "no user found with this number" })
                     }
-                    // const currentUserAmount = chips.amount;
+                    if(chips.status==="Accepted"){
+                         currentUserAmount = chips.amount;
+                    
+                        // const currentUserAmount = chips.amount;
+                    }
                     console.log("currentUserAmount", currentUserAmount);
                     res.status(200).json(currentUserAmount);
+                    
                 } catch (e) {
                     res.status(400).json({ msg: e.message });
                 }
