@@ -15,6 +15,23 @@ require('./models/GameResult');
 require('./models/Query');
 require('./models/SetChallenge');
 require('./models/SellChips');
+
+
+// app.use(cors({
+//     credentials: true,
+//   }));
+  app.set('trust proxy', 1);
+//   app.use(
+//     session({
+//       secret: session_secret,
+//       cookie: { maxAge: 1 * 60 * 60 * 1000, sameSite:'none',secure:true },
+//       resave: true,
+//       saveUninitialized:false
+//     })
+//   );
+
+
+
 // const User = require('./models/User');
 // const authRoutes = require('./routes/api/auth.js');
 // const queryRoutes = require('./routes/api/query.js');
@@ -76,7 +93,7 @@ require('./routes/api/users')(app)
 
 
 app.get('/',(req,res)=>{
-res.send("app is runniing at 9000");
+res.send("app is runniing at well");
 })
 
 
