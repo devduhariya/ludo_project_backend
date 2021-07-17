@@ -23,14 +23,14 @@ app.set('trust proxy', 1);
 // app.use(cors());
 app.use(cors({
     credentials: true,
-    origin: "https://ludowin.herokuapp.com/"
+    origin: "https://ludowin.herokuapp.com"
   }));
 
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.Mongo_Url, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.Mongo_Url || "Mongo_Url= mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
 
 require('./routes/api/auth')(app)
 require('./routes/api/buyChips')(app)
