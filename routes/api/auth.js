@@ -13,7 +13,7 @@ var router = Router()
 // const User =require ('../../models/User');
 const  auth = require('../../middleware/auth');
 
-const JWT_SECRET   = process.env.JWT_SECRET;
+const JWT_SECRET   = "secret";
 // const router = Router();
 
 /**
