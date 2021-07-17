@@ -94,7 +94,7 @@ module.exports = (app) => {
         return a - b;
     }
 
-    const Totalchips = function (a) {
+    const Totalchips = function (a,b) {
         return a + a;
     }
     app.put('/api/setChallenge/:id', auth, async (req, res) => {

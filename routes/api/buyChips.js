@@ -73,8 +73,8 @@ module.exports = (app) => {
             }
         });
     });
-    const AddAmount = function (a, b) {
-        return a + b;
+    const AddAmount = function (a) {
+        return a + a;
     }
     app.put('/api/buychips/:id', async (req, res) => {
 
