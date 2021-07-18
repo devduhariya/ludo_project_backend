@@ -136,7 +136,7 @@ module.exports = (app) => {
                     );
                     console.log("chips",chips);
                     if (!chips) {
-                        res.json({ message: "no chips" })
+                        res.json(currentUserAmount)
                     }
                     // if(chips.status==="Accepted"){
                          currentUserAmount = chips.amount;
