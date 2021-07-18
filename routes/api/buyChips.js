@@ -130,7 +130,7 @@ module.exports = (app) => {
                 res.sendStatus(403);
             } else {
                 try {
-                    let currentUserAmount = 0
+                    let currentUserAmount = 10
                     // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
                     const chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
