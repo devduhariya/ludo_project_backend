@@ -136,13 +136,13 @@ module.exports = (app) => {
                     );
                     // console.log("chips",chips);
                     if (!chips) {
-                        res.json({ message: "no user found with this number" })
+                        res.json({ message: "no chips" })
                     }
-                    if(chips.status==="Accepted"){
+                    // if(chips.status==="Accepted"){
                          currentUserAmount = chips.amount;
                     
                         // const currentUserAmount = chips.amount;
-                    }
+                    // }
                     console.log("currentUserAmount", currentUserAmount);
                     res.status(200).json(currentUserAmount);
                     
