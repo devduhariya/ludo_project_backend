@@ -9,7 +9,7 @@ const https = require('https');
 const Payment = require('../../models/Payment');
 const auth = require('../../middleware/auth')
 
-const JWT_SECRET   = "secret";
+const JWT_SECRET = "secret";
 module.exports = (app) => {
     app.get('/api/buychips', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -85,30 +85,36 @@ module.exports = (app) => {
         // const existingStatus = product.status;
 
         let amount = product.amount
-        console.log("amount", product)
-
-
-        await Payment.findByIdAndUpdate(id,
-            {
-                amount,
-                status
-            },
-            { new: true }
-        );
+        // console.log("amount", product)
+        // await Payment.findByIdAndUpdate(id,
+        //     {
+        //         amount
+        //     },
+        //     { new: true }
+        // );
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
-        // console.log("id chips",chips._id)
         let existAmount = chips.amount;
+        // console.log("existAmount", chips)
         const chipsId = chips._id
-
-        const result = await Payment.findByIdAndUpdate(chipsId,
-            {
-                amount: AddAmount(existAmount, amount)
-            },
-            { new: true }
-        );
-        res.send(result);
+        if (chips.status === 'Accepted') {
+            const result = await Payment.findByIdAndUpdate(chipsId,
+                {
+                    amount: AddAmount(existAmount, amount)
+                },
+                { new: true }
+            );
+            res.send(result);
+        } else if (chips.status === 'pending') {
+            const result = await Payment.findByIdAndUpdate(chipsId,
+                {
+                    status,
+                    amount: amount
+                },
+                { new: true }
+            );
+            res.send(result);
+        }
     });
-
 
     app.delete('/api/buychips/:id', async (req, res) => {
         const id = req.params.id;
@@ -121,8 +127,6 @@ module.exports = (app) => {
         }
     });
 
-
-
     app.get('/api/buychips/totalchips', auth, async (req, res) => {
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -134,19 +138,19 @@ module.exports = (app) => {
                     // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
                     const chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
-                    
-                    console.log("chips",chips.amount);
+
+                    console.log("chips", chips.amount);
                     if (!chips) {
                         res.json(currentUserAmount)
                     }
-                    if(chips.status==="Accepted"){
-                         currentUserAmount = chips.amount;
-                    
+                    if (chips.status === "Accepted") {
+                        currentUserAmount = chips.amount;
+
                         // const currentUserAmount = chips.amount;
-                    
-                    console.log("currentUserAmount", currentUserAmount);
-                    res.status(200).json(currentUserAmount);
-                    }else if(chips.status==="pending"){
+
+                        console.log("currentUserAmount", currentUserAmount);
+                        res.status(200).json(currentUserAmount);
+                    } else if (chips.status === "pending") {
                         res.json(currentUserAmount)
                     }
                 } catch (e) {
@@ -158,7 +162,7 @@ module.exports = (app) => {
 
     app.get('/api/buychips/all', async (req, res) => {
         try {
-            console.log('auth',auth)
+            // console.log('auth',auth)
             const query = await Payment.find();
             if (!query) throw Error('No queries');
 
