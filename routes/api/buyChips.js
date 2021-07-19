@@ -130,22 +130,25 @@ module.exports = (app) => {
                 res.sendStatus(403);
             } else {
                 try {
-                    let currentUserAmount = 10
+                    let currentUserAmount = 0
                     // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
                     const chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
-                    console.log("chips",chips);
+                    
+                    console.log("chips",chips.amount);
                     if (!chips) {
                         res.json(currentUserAmount)
                     }
-                    // if(chips.status==="Accepted"){
+                    if(chips.status==="Accepted"){
                          currentUserAmount = chips.amount;
                     
                         // const currentUserAmount = chips.amount;
-                    // }
+                    
                     console.log("currentUserAmount", currentUserAmount);
                     res.status(200).json(currentUserAmount);
-                    
+                    }else if(chips.status==="pending"){
+                        res.json(currentUserAmount)
+                    }
                 } catch (e) {
                     res.status(400).json({ msg: e.message });
                 }
