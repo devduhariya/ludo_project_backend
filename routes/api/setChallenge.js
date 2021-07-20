@@ -6,7 +6,7 @@ const Challenge = require('../../models/SetChallenge');
 const auth = require('../../middleware/auth');
 const Payment = require('../../models/Payment');
 const Result = require('../../models/GameResult');
-
+const User = require('../../models/User')
 // const router = Router();
 var Router = require('router')
 var router = Router()
@@ -49,6 +49,10 @@ module.exports = (app) => {
         });
     });
 
+    const subtractCurrentUserChips = function (a, b) {
+        return a - b;
+    }
+
     app.post('/api/setChallenge', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const { amount, roomCode } = req.body;
@@ -60,6 +64,8 @@ module.exports = (app) => {
             } else {
                 let chips = await Payment.findOne({ paytm_no: authData.user.ph });
                 const totalchips = chips.amount;
+                const userId = chips._id;
+                // const newAmount = subtractCurrentUserChips(totalchips,amount)
                 // try {
                 if (totalchips > amount) {
                     const newChallenge = new Challenge({
@@ -69,7 +75,14 @@ module.exports = (app) => {
                         paytm_no
                     });
                     const challenge = await newChallenge.save();
-                    if (!challenge) throw Error('Something went wrong saving the challenge');
+                    // if (!challenge) throw Error('Something went wrong saving the challenge');
+                    const ans = await Payment.findByIdAndUpdate(userId,
+                        {
+                            amount: subtractCurrentUserChips(totalchips, amount)
+
+                        },
+                        { new: true }
+                    );
                     res.status(200).json({ challenge });
                 } else {
                     res.status(400).json({ message: "you don't have sufficient chips" })
@@ -94,30 +107,20 @@ module.exports = (app) => {
         return a - b;
     }
 
-    const Totalchips = function (a,b) {
+    const Totalchips = function (a) {
         return a + a;
     }
     app.put('/api/setChallenge/:id', auth, async (req, res) => {
         const id = req.params.id;
-
-        //  const {screenshots} = req.body
-        // const {screenshots,won} = req.body;
-        // const {secondUser:[won,lost,screenshots]} = req.body;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Challenge.findById({ _id: id })
-            // let winningAmount = null
+
             const challengeAmount = product.amount
-            // let user1 = product.paytm_no
-            // console.log("user1", product)
-            // const { currentUserNumber } = authData.user.ph;
-            const result = await Payment.findOne({ paytm_no: authData.user.ph })
             const userId = result._id;
-            // let user2 = result.paytm_no
             const currentUserAmount = result.amount
-            // const  {won} = req.body;
-            // const { won, screenshots } = req.body
-            // const { won1, screenshots1 } = req.body
-            // console.log("usscreenshotser2",req.body)
+            // const findAdmin = await User.findOne({role:authData.user.role})
+            const result = await User.findOne({ paytm_no: authData.user.ph })
+
             if (err) {
                 res.sendStatus(403);
             }
@@ -125,10 +128,13 @@ module.exports = (app) => {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
                 } else {
+                    const winingAmount = Totalchips(challengeAmount);
+
+                    
+                    // console.log("winingAmount",winingAmount,findAdmin);
                     const ans = await Payment.findByIdAndUpdate(userId,
                         {
-                            amount: subtractChips(currentUserAmount, challengeAmount),
-                            wiiningAmount: Totalchips(challengeAmount)
+                            amount: subtractChips(currentUserAmount, challengeAmount)
 
                         },
                         { new: true }
@@ -138,29 +144,10 @@ module.exports = (app) => {
 
                     if (removeChallenge) {
                         await Challenge.deleteOne({ _id: id });
-                        res.status(200).send({ message: 'request removed' });
+                        res.status(200).send(ans);
                     } else {
                         res.status(400).send({ message: "no request" })
                     }
-                    // const newResult = new Result({
-                    //     user2: {
-                    //         user2,
-                    //         won,
-                    //         screenshots
-                    //     },
-                    //     // user2: {
-                    //     //     user2,
-                    //     //     won: won1,
-                    //     //     screenshots: screenshots1,
-                    //     // },
-
-
-                    // });
-                    // const GameResult = await newResult.save();
-                    // console.log("fisrstuser", newResult);
-                    // // console.log("fisrstuser", newResult.secondUser)
-                    // if (!GameResult) throw Error('Something went wrong saving the challenge');
-                    // res.status(200).json({ GameResult });
 
                 }
             }
@@ -176,35 +163,5 @@ module.exports = (app) => {
         } else {
             res.status(400).send({ message: "no request" })
         }
-    });
-
-
-    const AddAmount = function (a, b) {
-        return a + b;
-    }
-    app.put('/api/setChallenge/:id', auth, async (req, res) => {
-        const id = req.params.id;
-        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-            let user1 = authData.user.ph
-            const { won, screenshots } = req.body;
-            const product = await Result.findById({ _id: id })
-            if (err) {
-                res.sendStatus(403);
-            }
-            else {
-                const ans = await Result.findByIdAndUpdate(id,
-                    {
-                        user1: {
-                            user1,
-                            won,
-                            screenshots
-                        },
-                    },
-                    { new: true }
-                );
-                res.status(200).json({ ans });
-            }
-        });
-
     });
 }

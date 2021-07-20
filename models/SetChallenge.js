@@ -5,10 +5,12 @@ const SetChallenge = new Schema({
         type: String
     },
     amount: {
-        type: Number
+        type: Number,
+        required:true
     },
     roomCode:{
-        type :Number
+        type :Number,
+        required: true
     },
     paytm_no:{
         type :Number

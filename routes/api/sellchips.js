@@ -6,8 +6,7 @@ var Router = require('router')
 var router = Router()
 const SellChips = require('../../models/SellChips');
 const auth = require('../../middleware/auth');
-// import Payment from '../../models/Payment';
-// import User from '../../models/User';
+const Payment = require('../../models/Payment');// import User from '../../models/User';
 // const router = Router();
 const JWT_SECRET   = "secret";
 module.exports =(app)=>{
@@ -48,34 +47,34 @@ app.get('/api/sellchips', auth, async (req, res) => {
 //     });
 // });
 
-// router.post('/', auth, async (req, res) => {
-//     const { paytm_no, amount } = req.body;
-//     // Simple validation
-//     if (!paytm_no || !amount) {
-//         return res.status(400).json({ msg: 'Please enter all fields' });
-//     }
-//     const existingNumber  = await Payment.find({paytm_no});
-//     res.status(200).json({ existingNumber });
-//     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-//         const id = authData.user._id
-//         console.log("id",id);
-//         if (err) {
-//             res.sendStatus(403);
-//         } else {
-//             try {
-//                 const newSellChips = new SellChips({
-//                     paytm_no,
-//                     amount
-//                 });
-//                 const sellChips = await newSellChips.save();
-//                 if (!sellChips) throw Error('Something went wrong saving the challenge');
-//                 res.status(200).json({ sellChips,authData });
-//             } catch (e) {
-//                 res.status(400).json({ msg: e.message });
-//             }
-//         }
-//     });
-// });
+app.post('/', auth, async (req, res) => {
+    const { paytm_no, amount } = req.body;
+    // Simple validation
+    if (!paytm_no || !amount) {
+        return res.status(400).json({ msg: 'Please enter all fields' });
+    }
+    const existingNumber  = await Payment.find({paytm_no});
+    res.status(200).json({ existingNumber });
+    jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+        const id = authData.user._id
+        console.log("id",id);
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            try {
+                const newSellChips = new SellChips({
+                    paytm_no,
+                    amount
+                });
+                const sellChips = await newSellChips.save();
+                if (!sellChips) throw Error('Something went wrong saving the challenge');
+                res.status(200).json({ sellChips,authData });
+            } catch (e) {
+                res.status(400).json({ msg: e.message });
+            }
+        }
+    });
+});
 
 // const subtractChips = function (a, b) {
 //     return a - b;

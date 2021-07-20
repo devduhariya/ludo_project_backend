@@ -1,28 +1,5 @@
 const { Schema, model } = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
-
-// var Comments = new Schema({
-//     user1: {
-//         type: Number
-//     },
-//     won: {
-//         type: String,
-//     },
-//     screenshots: {
-//         type: String
-//     },
-// });
-// var Comments2 = new Schema({
-//     user2: {
-//         type: Number
-//     },
-//     won: {
-//         type: String,
-//     },
-//     screenshots: {
-//         type: String
-//     },
-// });
 const ResultSchema = new Schema({
     user1: [
         {
