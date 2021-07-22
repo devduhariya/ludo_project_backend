@@ -91,18 +91,13 @@ module.exports = (app) => {
         console.log("idddd", chips._id)
         const chipsId = chips._id
         if (product.status === 'Accepted') {
-            const result = await Payment.findByIdAndUpdate(chipsId,
-                {
-                    amount: AddAmount(existAmount, amount)
-                },
-                { new: true }
-            );
+            const result = await Payment.findOne({chipsId});
             res.send(result);
         } else if (product.status === 'pending') {
             const result = await Payment.findByIdAndUpdate(id,
                 {
-                    status:Status,
-                    amount:AddAmount(existAmount, amount)
+                    amount:AddAmount(existAmount,amount),
+                    status:Status
                 },
                 { new: true }
             );
