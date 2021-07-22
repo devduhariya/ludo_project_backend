@@ -30,8 +30,8 @@ module.exports = (app) => {
                             if (allTranctionSatus === "pending") {
 
                                 tranctionsWithStatusPending.push(allTranctions[i])
+                                // console.log("tranctionsWithStatusPending",tranctionsWithStatusPending)
                             }
-
                         }
                         return res.status(200).json(
                             tranctionsWithStatusPending
@@ -80,23 +80,17 @@ module.exports = (app) => {
 
         const id = req.params.id;
 
-        const status = "Accepted";
+        const Status = "Accepted";
         const product = await Payment.findById({ _id: id })
-        // const existingStatus = product.status;
+
 
         let amount = product.amount
-        // console.log("amount", product)
-        // await Payment.findByIdAndUpdate(id,
-        //     {
-        //         amount
-        //     },
-        //     { new: true }
-        // );
+
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
         let existAmount = chips.amount;
-        // console.log("existAmount", chips)
+        console.log("idddd", chips._id)
         const chipsId = chips._id
-        if (chips.status === 'Accepted') {
+        if (product.status === 'Accepted') {
             const result = await Payment.findByIdAndUpdate(chipsId,
                 {
                     amount: AddAmount(existAmount, amount)
@@ -104,11 +98,11 @@ module.exports = (app) => {
                 { new: true }
             );
             res.send(result);
-        } else if (chips.status === 'pending') {
-            const result = await Payment.findByIdAndUpdate(chipsId,
+        } else if (product.status === 'pending') {
+            const result = await Payment.findByIdAndUpdate(id,
                 {
-                    status,
-                    amount: amount
+                    status:Status,
+                    amount:AddAmount(existAmount, amount)
                 },
                 { new: true }
             );
