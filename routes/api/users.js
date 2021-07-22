@@ -6,7 +6,7 @@ const auth = require('../../middleware/auth')
 // var router = Router()
 //import config from '../../config';
 const jwt = require('jsonwebtoken');
-const JWT_SECRET   = "secret";
+const JWT_SECRET = "secret";
 
 /**
  * @route   GET api/users

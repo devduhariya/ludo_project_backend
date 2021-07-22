@@ -7,7 +7,7 @@ const ResultSchema = new Schema({
                 type: String,
             },
 
-            won: {
+            result: {
                 type: String,
             },
             screenshots: {
@@ -21,7 +21,7 @@ const ResultSchema = new Schema({
             user2: {
                 type: String,
             },
-            won: {
+            result: {
                 type: String,
             },
             screenshots: {
