@@ -25,8 +25,8 @@ module.exports = (app) => {
                             if (allTranctionSatus === "pending") {
 
                                 tranctionsWithStatusPending.push(allTranctions[i])
+                                // console.log("tranctionsWithStatusPending",tranctionsWithStatusPending)
                             }
-
                         }
                         return res.status(200).json(
                             tranctionsWithStatusPending
@@ -75,26 +75,21 @@ module.exports = (app) => {
 
         const id = req.params.id;
 
-        const status = "Accepted";
+        const Status = "Accepted";
         const product = await Payment.findById({ _id: id })
 
         let amount = product.amount
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
         let existAmount = chips.amount;
         const chipsId = chips._id
-        if (chips.status === 'Accepted') {
-            const result = await Payment.findByIdAndUpdate(chipsId,
-                {
-                    amount: AddAmount(existAmount, amount)
-                },
-                { new: true }
-            );
+        if (product.status === 'Accepted') {
+            const result = await Payment.findOne({chipsId});
             res.send(result);
-        } else if (chips.status === 'pending') {
-            const result = await Payment.findByIdAndUpdate(chipsId,
+        } else if (product.status === 'pending') {
+            const result = await Payment.findByIdAndUpdate(id,
                 {
-                    status,
-                    amount: amount
+                    amount:AddAmount(existAmount,amount),
+                    status:Status
                 },
                 { new: true }
             );
