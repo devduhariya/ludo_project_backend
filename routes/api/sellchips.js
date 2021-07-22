@@ -45,7 +45,7 @@ module.exports = (app) => {
     app.post('/api/sellchips', auth, async (req, res) => {
         const { paytm_no,txn_ID, amount } = req.body;
         // Simple validation
-        if (!paytm_no || txn_ID || !amount) {
+        if (!paytm_no || !txn_ID || !amount) {
             return res.status(400).json({ msg: 'Please enter all fields' });
         }
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {

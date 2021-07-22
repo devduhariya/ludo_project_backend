@@ -28,7 +28,7 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'build')));
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.Mongo_Url || "mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true , useCreateIndex : true },()=>{
+mongoose.connect(process.env.Mongo_Url || "mongodb+srv://ludo:ludo@ludo.cxaqe.mongodb.net/ludo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true },()=>{
     console.log('mongodb Connected')
 });
 
