@@ -1,13 +1,9 @@
 
 require('dotenv').config()
-// const { Router } = require('express')
 const jwt = require('jsonwebtoken');
-//import config from '../../config';
-// const router = Router();
-// const router = require('express').Router()
-const https = require('https');
 const Payment = require('../../models/Payment');
 const auth = require('../../middleware/auth')
+const https = require('https');
 
 const JWT_SECRET = "secret";
 module.exports = (app) => {
@@ -82,12 +78,9 @@ module.exports = (app) => {
         const Status = "Accepted";
         const product = await Payment.findById({ _id: id })
 
-
         let amount = product.amount
-
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
         let existAmount = chips.amount;
-        // console.log("existAmount", chips)
         const chipsId = chips._id
         // if (product.status === 'Accepted') {
         //     const result1 = await Payment.findByIdAndUpdate(chipsId,
@@ -136,7 +129,6 @@ module.exports = (app) => {
             } else {
                 try {
                     let currentUserAmount = 0
-                    // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
                     const chips = await Payment.findOne({ paytm_no: authData.user.ph }
                     );
 
@@ -146,8 +138,6 @@ module.exports = (app) => {
                     }
                     if (chips.status === "Accepted") {
                         currentUserAmount = chips.amount;
-
-                        // const currentUserAmount = chips.amount;
 
                         console.log("currentUserAmount", currentUserAmount);
                         res.status(200).json(currentUserAmount);
@@ -163,7 +153,6 @@ module.exports = (app) => {
 
     app.get('/api/buychips/all', async (req, res) => {
         try {
-            // console.log('auth',auth)
             const query = await Payment.find();
             if (!query) throw Error('No queries');
 
