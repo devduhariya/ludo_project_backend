@@ -2,7 +2,7 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
 const Payment = require('../../models/Payment');
-const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth')
 const https = require('https');
 
 const JWT_SECRET = "secret";
