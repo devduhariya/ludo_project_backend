@@ -26,7 +26,6 @@ module.exports = (app) => {
                             if (allTranctionSatus === "pending") {
 
                                 tranctionsWithStatusPending.push(allTranctions[i])
-                                // console.log("tranctionsWithStatusPending",tranctionsWithStatusPending)
                             }
                         }
                         return res.status(200).json(
@@ -83,21 +82,34 @@ module.exports = (app) => {
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
         let existAmount = chips.amount;
         const chipsId = chips._id
-        if (product.status === 'Accepted') {
-            const result = await Payment.findOne({chipsId});
-            res.send(result);
-        } else if (product.status === 'pending') {
-            const result = await Payment.findByIdAndUpdate(id,
+        // if (product.status === 'Accepted') {
+        //     const result1 = await Payment.findByIdAndUpdate(chipsId,
+        //         {
+        //             amount: AddAmount(existAmount, amount)
+        //         },
+        //         { new: true }
+        //     );
+        //     res.send(result1);
+        // } else 
+        if (product.status === 'pending') {
+            await Payment.findByIdAndUpdate(id,
                 {
-                    amount:AddAmount(existAmount,amount),
-                    status:Status
+                    status: Status
                 },
                 { new: true }
             );
-            res.send(result);
+            // res.send(result2);
+
+            const result1 = await Payment.findByIdAndUpdate(chipsId,
+                {
+                    amount: AddAmount(existAmount, amount)
+                },
+                { new: true }
+            );
+            res.send(result1);
+
         }
     });
-
     app.delete('/api/buychips/:id', async (req, res) => {
         const id = req.params.id;
         const product = await Payment.findById({ _id: id })

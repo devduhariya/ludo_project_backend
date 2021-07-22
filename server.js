@@ -42,7 +42,7 @@ require('./routes/api/query')(app)
 require('./routes/api/setChallenge')(app)
 //require('./routes/api/sellChips')(app)
 require('./routes/api/users')(app)
-
+require('./routes/api/postResult')(app)
 
 app.get('/', (req, res) => {
     res.send("app is runniing at well");

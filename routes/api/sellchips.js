@@ -110,6 +110,48 @@ module.exports = (app) => {
         } else {
             res.status(400).send({ message: "no request" })
         }
+
+        const existingNumber = await Payment.find({ paytm_no });
+        const userId = existingNumber._id
+        const existAmount = existingNumber.amount;
+        res.status(200).json({ existingNumber });
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            
+            const currentUser = await Payment.findOne({ paytm_no: authData.user.ph });
+            const id = currentUser._id
+            const currentUserAmount = currentUser.amount;
+            if (err) {
+                res.sendStatus(403);
+            } else {
+                try {
+                    const newSellChips = new SellChips({
+                        paytm_no,
+                        amount
+                    });
+
+                    const result1 = await Payment.findByIdAndUpdate(id,
+                        {
+                            amount: subtractChips(currentUserAmount, amount),
+                        },
+                        { new: true }
+                    );
+
+                    const result2 = await Payment.findByIdAndUpdate(userId,
+                        {
+                            amount: addChips(existAmount, amount),
+                        },
+                        { new: true }
+                    );
+                    // res.send(result1,result2);
+
+                    const sellChips = await newSellChips.save();
+                    if (!sellChips) throw Error('Something went wrong saving the challenge');
+                    res.status(200).json({ sellChips,result1,result2 });
+                } catch (e) {
+                    res.status(400).json({ msg: e.message });
+                }
+            }
+        });
     });
 
     app.get('/api/sellchips/totalchips', auth, async (req, res) => {
