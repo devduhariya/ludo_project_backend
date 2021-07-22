@@ -9,99 +9,31 @@ const https = require('https');
 const Payment = require('../../models/Payment');
 const auth = require('../../middleware/auth')
 const Result = require('../../models/GameResult')
-const Challenge = require('../../models/SetChallenge')
+const Challenge = require('../../models/SetChallenge');
+const { findOne } = require('../../models/Payment');
 const JWT_SECRET = "secret";
 module.exports = (app) => {
-    // app.get('/api/buychips', auth, async (req, res) => {
-    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-    //         const Role = authData.user.role;
-    //         const allTranctions = await Payment.find();
-
-    //         let allTranctionSatus = null;
-    //         let tranctionsWithStatusPending = [];
-
-    //         if (err) {
-    //             res.sendStatus(403);
-    //         }
-    //         else {
-    //             if (Role === 'admin') {
-    //                 try {
-    //                     for (let i = 0; i < allTranctions.length; i++) {
-    //                         allTranctionSatus = allTranctions[i].status;
-    //                         if (allTranctionSatus === "pending") {
-
-    //                             tranctionsWithStatusPending.push(allTranctions[i])
-    //                         }
-
-    //                     }
-    //                     return res.status(200).json(
-    //                         tranctionsWithStatusPending
-    //                     );
-    //                 } catch (e) {
-    //                     res.status(400).json({ msg: e.message });
-    //                 }
-    //             }
-    //             else {
-    //                 res.sendStatus(401);
-    //             }
-    //         }
-    //     });
-    // });
-
-    // app.post('/api/gameResult', auth, async (req, res) => {
-    //     const { paytm_no, txn_ID, amount } = req.body;
-    //     // Simple validation
-    //     if (!paytm_no || !txn_ID || !amount) {
-    //         return res.status(400).json({ msg: 'Please enter all fields' });
-    //     }
-    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-    //         if (err) {
-    //             res.sendStatus(403);
-    //         } else {
-    //             try {
-    //                 const newPayment = new GameResult({
-    //                     paytm_no,
-    //                     txn_ID,
-    //                     amount
-    //                 });
-    //                 // newPayment.status = "pending"
-    //                 const payment = await newPayment.save();
-    //                 if (!payment) throw Error('error while saving payment');
-    //                 res.status(200).json({ payment });
-    //             } catch (e) {
-    //                 res.status(400).json({ msg: e.message });
-    //             }
-    //         }
-    //     });
-    // });
-
 
     const subtractChips = function (a, b) {
         return a - b;
     }
-
+    const TotalAmount = (a) => a + a
     app.post('/api/result/:id', auth, async (req, res) => {
         const id = req.params.id;
-    
-        //  const {screenshots} = req.body
-        // const {screenshots,won} = req.body;
-        // const {secondUser:[won,lost,screenshots]} = req.body;
+
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Challenge.findById({ _id: id })
-            // let winningAmount = null
+
             console.log("user1", product)
             const challengeAmount = product.amount
-            let user1 = product.paytm_no
-            // console.log("user1", product)
-            // const { currentUserNumber } = authData.user.ph;
+
             const ans = await Payment.findOne({ paytm_no: authData.user.ph })
             const userId = ans._id;
             let user2 = ans.paytm_no
             const currentUserAmount = ans.amount
             // const  {won} = req.body;
             const { result, screenshots } = req.body
-            // const { won1, screenshots1 } = req.body
-            // console.log("usscreenshotser2",req.body)
+
             if (err) {
                 res.sendStatus(403);
             }
@@ -109,136 +41,127 @@ module.exports = (app) => {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
                 } else {
-                    // const ans = await Payment.findByIdAndUpdate(userId,
-                    //     {
-                    //         amount: subtractChips(currentUserAmount, challengeAmount)
-    
-                    //     },
-                    //     { new: true }
-                    // );
+                    const ans = await Payment.findByIdAndUpdate(userId,
+                        {
+                            amount: subtractChips(currentUserAmount, challengeAmount)
+
+                        },
+                        { new: true }
+                    );
                     const newResult = new Result({
                         user2: {
                             user2,
                             result,
                             screenshots
                         },
-                        // user2: {
-                        //     user2,
-                        //     won: won1,
-                        //     screenshots: screenshots1,
-                        // },
-    
+
+                        challengeAmount: TotalAmount(challengeAmount)
+
                     });
                     const GameResult = await newResult.save();
                     // console.log("fisrstuser", newResult);
                     // console.log("fisrstuser", newResult.secondUser)
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ GameResult});
-    
+                    res.status(200).json({ GameResult });
+
                 }
             }
         });
-    
+
+    });
+
+    app.put('/api/result/:id', auth, async (req, res) => {
+
+        const id = req.params.id;
+        const { result, screenshots } = req.body
+
+
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            const product = await Result.findById({ _id: id })
+            const user1 = authData.user.ph
+            // let winningAmount = null
+            // const userStatus= product.user1
+            console.log("product", product.user1)
+            const result1 = await Result.findByIdAndUpdate(id,
+                {
+                    user1: {
+                        user1,
+                        result,
+                        screenshots
+                    },
+                },
+                { new: true }
+            );
+            res.send(result1);
+            // }
+        });
+
     });
 
 
+    app.get('/api/results', async (req, res) => {
+        try {
+            const query = await Result.find();
+            if (!query) throw Error('No queries');
 
-    // const AddAmount = function (a, b) {
-    //     return a + b;
-    // }
-    // app.put('/api/buychips/:id', async (req, res) => {
+            res.status(200).json(query);
+        } catch (e) {
+            res.status(400).json({ msg: e.message });
+        }
+    });
 
-    //     const id = req.params.id;
+    const addWiningAmount = (a, b) => a + b
 
-    //     const status = "Accepted";
-    //     const product = await Payment.findById({ _id: id })
-    //     // const existingStatus = product.status;
+    app.put('/api/result/winner/:id', auth, async (req, res) => {
+        const id = req.params.id;
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            if (err) {
+                res.sendStatus(403);
+            } else {
+                try {
 
-    //     let amount = product.amount
-    //     // console.log("amount", product)
-    //     // await Payment.findByIdAndUpdate(id,
-    //     //     {
-    //     //         amount
-    //     //     },
-    //     //     { new: true }
-    //     // );
-    //     let chips = await Payment.findOne({ paytm_no: product.paytm_no });
-    //     let existAmount = chips.amount;
-    //     // console.log("existAmount", chips)
-    //     const chipsId = chips._id
-    //     if (chips.status === 'Accepted') {
-    //         const result = await Payment.findByIdAndUpdate(chipsId,
-    //             {
-    //                 amount: AddAmount(existAmount, amount)
-    //             },
-    //             { new: true }
-    //         );
-    //         res.send(result);
-    //     } else if (chips.status === 'pending') {
-    //         const result = await Payment.findByIdAndUpdate(chipsId,
-    //             {
-    //                 status,
-    //                 amount: amount
-    //             },
-    //             { new: true }
-    //         );
-    //         res.send(result);
-    //     }
-    // });
+                    const chips = await Result.findById(id);
+                    const user1Number = chips.user1[0].user1
+                    const user2Number = chips.user2[0].user2
+                    const winingAmount = chips.challengeAmount;
+                    const user1Status = chips.user1[0].result
+                    const user2Status = chips.user2[0].result
+                    // console.log("chips1", user1Number);
+                    // console.log("chips2", user2Number);
+                    // console.log("winingAmount", winingAmount)
+                    if (user1Status === "won" && user2Status === "lost") {
+                        const chipsUserHave = await Payment.findOne({ paytm_no: user1Number })
+                        console.log("chipsUserHave", chipsUserHave)
+                        const existAmount = chipsUserHave.amount
+                        const UserOneTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user1Number },
+                            {
+                                amount: addWiningAmount(existAmount, winingAmount)
+                            },
+                            { new: true }
+                        );
+                        res.json(UserOneTotalAmount)
+                    }
+                    else if (user2Status === "won" && user1Status === "lost") {
+                        const chipsUserHave = await Payment.findOne({ paytm_no: user2Number })
+                        console.log("chipsUserHave", chipsUserHave)
+                        // const user2Id = chipsUserHave_id
+                        const existAmount = chipsUserHave.amount
+                        const UserTwoTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user2Number },
+                            {
+                                amount: addWiningAmount(existAmount, winingAmount)
+                            },
+                            { new: true }
+                        );
+                        // console.log("UserTwoTotalAmount", UserTwoTotalAmount)
+                        res.json(UserTwoTotalAmount)
+                    }
 
-    // app.delete('/api/buychips/:id', async (req, res) => {
-    //     const id = req.params.id;
-    //     const product = await Payment.findById({ _id: id })
-    //     if (product) {
-    //         await Payment.deleteOne({ _id: id });
-    //         res.status(200).send({ message: 'request removed' });
-    //     } else {
-    //         res.status(400).send({ message: "no request" })
-    //     }
-    // });
 
-    // app.get('/api/buychips/totalchips', auth, async (req, res) => {
+                } catch (e) {
+                    res.status(400).json({ msg: e.message });
+                }
+            }
+        });
+    });
 
-    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-    //         if (err) {
-    //             res.sendStatus(403);
-    //         } else {
-    //             try {
-    //                 let currentUserAmount = 0
-    //                 // const chips = await Payment.findOne({paytm_no:{eq:currentUserNumber}});
-    //                 const chips = await Payment.findOne({ paytm_no: authData.user.ph }
-    //                 );
-
-    //                 console.log("chips", chips.amount);
-    //                 if (!chips) {
-    //                     res.json(currentUserAmount)
-    //                 }
-    //                 if (chips.status === "Accepted") {
-    //                     currentUserAmount = chips.amount;
-
-    //                     // const currentUserAmount = chips.amount;
-
-    //                     console.log("currentUserAmount", currentUserAmount);
-    //                     res.status(200).json(currentUserAmount);
-    //                 } else if (chips.status === "pending") {
-    //                     res.json(currentUserAmount)
-    //                 }
-    //             } catch (e) {
-    //                 res.status(400).json({ msg: e.message });
-    //             }
-    //         }
-    //     });
-    // });
-
-    // app.get('/api/buychips/all', async (req, res) => {
-    //     try {
-    //         // console.log('auth',auth)
-    //         const query = await Payment.find();
-    //         if (!query) throw Error('No queries');
-
-    //         res.status(200).json(query);
-    //     } catch (e) {
-    //         res.status(400).json({ msg: e.message });
-    //     }
-    // });
 }

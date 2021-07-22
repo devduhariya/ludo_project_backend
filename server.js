@@ -3,8 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-var Router = require('router')
-var router = Router()
+// var Router = require('router')
+// var router = Router()
 const app = express();
 // const dotenv = require("dotenv");
 const path = require("path");
@@ -21,8 +21,9 @@ require('./models/SetChallenge');
 
 app.set('trust proxy', 1);
 
-const PORT = process.env.PORT || 6800
 app.use(cors());
+
+const PORT = process.env.PORT || 6800
 
 
 
@@ -45,7 +46,7 @@ require('./routes/api/users')(app)
 require('./routes/api/postResult')(app)
 
 app.get('/', (req, res) => {
-    res.send("app is runniing at well");
+    res.send("app is runniing well");
 });
 
 
