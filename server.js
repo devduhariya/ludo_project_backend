@@ -15,7 +15,7 @@ require('./models/Payment');
 require('./models/GameResult');
 require('./models/Query');
 require('./models/SetChallenge');
-require('./models/SellChips');
+//require('./models/SellChips');
 
 
 
@@ -23,9 +23,6 @@ app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 6800
 app.use(cors());
-// app.use(cors({
-//     origin: "https://ludowin.herokuapp.com"
-//   }));
 
 
 
@@ -43,7 +40,7 @@ require('./routes/api/auth')(app)
 require('./routes/api/buyChips')(app)
 require('./routes/api/query')(app)
 require('./routes/api/setChallenge')(app)
-require('./routes/api/sellchips')(app)
+require('./routes/api/sellChips')(app)
 require('./routes/api/users')(app)
 
 
@@ -51,10 +48,5 @@ app.get('/', (req, res) => {
     res.send("app is runniing at well");
 });
 
-
-
-// if (process.env.NODE_ENV == "production") {
-//     app.use(express.static("client/build"));
-// }
 
 app.listen(PORT, () => console.log(`Server started on PORT ${PORT}`));
