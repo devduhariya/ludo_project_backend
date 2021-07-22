@@ -48,6 +48,7 @@ module.exports = (app) => {
         if (!paytm_no || !txn_ID || !amount) {
             return res.status(400).json({ msg: 'Please enter all fields' });
         }
+        console.log("reeq body",req.body)
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             if (err) {
                 res.sendStatus(403);
@@ -60,6 +61,7 @@ module.exports = (app) => {
                     });
                     newPayment.status = "pending"
                     const payment = await newPayment.save();
+                    console.log("New Paymewnt",newPayment)
                     if (!payment) throw Error('error while saving payment');
                     res.status(200).json({ payment });
                 } catch (e) {

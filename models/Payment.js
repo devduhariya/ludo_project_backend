@@ -16,9 +16,6 @@ const paymentSchema = new Schema({
    chips: {
       type: Number
    },
-   wiiningAmount: {
-      type: Number
-   },
    addedDate: {
       type: Date, default: Date.now
    },
