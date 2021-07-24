@@ -1,10 +1,6 @@
 
 require('dotenv').config()
-// const { Router } = require('express')
 const jwt = require('jsonwebtoken');
-//import config from '../../config';
-// const router = Router();
-// const router = require('express').Router()
 const https = require('https');
 const Payment = require('../../models/Payment');
 const auth = require('../../middleware/auth')
@@ -32,7 +28,6 @@ module.exports = (app) => {
             const userId = ans._id;
             let user2 = ans.paytm_no
             const currentUserAmount = ans.amount
-            // const  {won} = req.body;
             const { result, screenshots } = req.body
 
             if (err) {
@@ -60,8 +55,6 @@ module.exports = (app) => {
 
                     });
                     const GameResult = await newResult.save();
-                    // console.log("fisrstuser", newResult);
-                    // console.log("fisrstuser", newResult.secondUser)
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
                     res.status(200).json({ GameResult });
 
@@ -80,8 +73,6 @@ module.exports = (app) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Result.findById({ _id: id })
             const user1 = authData.user.ph
-            // let winningAmount = null
-            // const userStatus= product.user1
             console.log("product", product.user1)
             const result1 = await Result.findByIdAndUpdate(id,
                 {
@@ -127,9 +118,6 @@ module.exports = (app) => {
                     const winingAmount = chips.challengeAmount;
                     const user1Status = chips.user1[0].result
                     const user2Status = chips.user2[0].result
-                    // console.log("chips1", user1Number);
-                    // console.log("chips2", user2Number);
-                    // console.log("winingAmount", winingAmount)
                     if (user1Status === "won" && user2Status === "lost") {
                         const chipsUserHave = await Payment.findOne({ paytm_no: user1Number })
                         console.log("chipsUserHave", chipsUserHave)
