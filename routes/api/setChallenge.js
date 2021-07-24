@@ -137,14 +137,14 @@ module.exports = (app) => {
                         { new: true }
                     );
 
-                    const removeChallenge = await Challenge.findById({ _id: id })
+                    // const removeChallenge = await Challenge.findById({ _id: id })
 
-                    if (removeChallenge) {
-                        await Challenge.deleteOne({ _id: id });
-                        res.status(200).send(ans);
-                    } else {
-                        res.status(400).send({ message: "no request" })
-                    }
+                    // if (removeChallenge) {
+                    //     await Challenge.deleteOne({ _id: id });
+                    //     res.status(200).send(ans);
+                    // } else {
+                    //     res.status(400).send({ message: "no request" })
+                    // }
 
                 }
             }
