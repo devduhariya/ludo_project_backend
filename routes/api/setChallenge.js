@@ -72,6 +72,14 @@ module.exports = (app) => {
                         roomCode,
                         paytm_no
                     });
+
+                    const ans = await Payment.findByIdAndUpdate(userId,
+                        {
+                            amount: subtractCurrentUserChips(totalchips, amount)
+
+                        },
+                        { new: true }
+                    );
                     const challenge = await newChallenge.save();
                     if (!challenge) throw Error('Something went wrong saving the challenge');
                     res.status(200).json({ challenge });
@@ -162,33 +170,4 @@ module.exports = (app) => {
         }
     });
 
-
-    // const AddAmount = function (a, b) {
-    //     return a + b;
-    // }
-    // app.put('/api/setChallenge/:id', auth, async (req, res) => {
-    //     const id = req.params.id;
-    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-    //         let user1 = authData.user.ph
-    //         const { won, screenshots } = req.body;
-    //         const product = await Result.findById({ _id: id })
-    //         if (err) {
-    //             res.sendStatus(403);
-    //         }
-    //         else {
-    //             const ans = await Result.findByIdAndUpdate(id,
-    //                 {
-    //                     user1: {
-    //                         user1,
-    //                         won,
-    //                         screenshots
-    //                     },
-    //                 },
-    //                 { new: true }
-    //             );
-    //             res.status(200).json({ ans });
-    //         }
-    //     });
-
-    // });
 }
