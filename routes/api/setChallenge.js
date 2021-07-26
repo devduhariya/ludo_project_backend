@@ -6,7 +6,6 @@ const Challenge = require('../../models/SetChallenge');
 const auth = require('../../middleware/auth');
 const Payment = require('../../models/Payment');
 const Result = require('../../models/GameResult');
-
 // const router = Router();
 var Router = require('router')
 var router = Router()
