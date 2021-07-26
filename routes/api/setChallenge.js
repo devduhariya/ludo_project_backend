@@ -64,7 +64,8 @@ module.exports = (app) => {
             } else {
                 let chips = await Payment.findOne({ paytm_no: authData.user.ph });
                 const totalchips = chips.amount;
-                // const userId = chips._id
+                const userId = chips._id
+                // console.log("usewrId",userId)
                 // try {
                 if (totalchips > amount) {
                     const newChallenge = new Challenge({
@@ -83,7 +84,7 @@ module.exports = (app) => {
                     );
                     const challenge = await newChallenge.save();
                     if (!challenge) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ challenge });
+                    res.status(200).json({ challenge});
                 } else {
                     res.status(400).json({ message: "you don't have sufficient chips" })
                 }

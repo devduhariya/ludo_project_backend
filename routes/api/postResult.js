@@ -14,7 +14,7 @@ module.exports = (app) => {
         return a - b;
     }
     const TotalAmount = (a) => a + a
-    
+
     app.post('/api/result/:id', auth, async (req, res) => {
         const id = req.params.id;
 
@@ -91,15 +91,19 @@ module.exports = (app) => {
     });
 
 
-    app.get('/api/results', async (req, res) => {
-        try {
-            const query = await Result.find();
-            if (!query) throw Error('No queries');
+    app.get('/api/results',auth, async (req, res) => {
 
-            res.status(200).json(query);
-        } catch (e) {
-            res.status(400).json({ msg: e.message });
-        }
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            
+            try {
+                const query = await Challenge.find({paytm_no:authData.user.ph});
+                if (!query) throw Error('No queries');
+
+                res.status(200).json(query);
+            } catch (e) {
+                res.status(400).json({ msg: e.message });
+            }
+        });
     });
 
     const addWiningAmount = (a, b) => a + b
