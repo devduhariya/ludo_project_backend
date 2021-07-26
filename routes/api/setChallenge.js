@@ -83,7 +83,7 @@ module.exports = (app) => {
                     );
                     const challenge = await newChallenge.save();
                     if (!challenge) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ challenge});
+                    res.status(200).json({ challenge,ans});
                 } else {
                     res.status(400).json({ message: "you don't have sufficient chips" })
                 }
