@@ -64,7 +64,7 @@ module.exports = (app) => {
             } else {
                 let chips = await Payment.findOne({ paytm_no: authData.user.ph });
                 const totalchips = chips.amount;
-                const userId = chips._id
+                // const userId = chips._id
                 // try {
                 if (totalchips > amount) {
                     const newChallenge = new Challenge({
