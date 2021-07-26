@@ -14,6 +14,7 @@ module.exports = (app) => {
         return a - b;
     }
     const TotalAmount = (a) => a + a
+    
     app.post('/api/result/:id', auth, async (req, res) => {
         const id = req.params.id;
 
