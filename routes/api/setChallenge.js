@@ -6,7 +6,6 @@ const Challenge = require('../../models/SetChallenge');
 const auth = require('../../middleware/auth');
 const Payment = require('../../models/Payment');
 const Result = require('../../models/GameResult');
-  //multer
 // const router = Router();
 var Router = require('router')
 var router = Router()
@@ -64,8 +63,6 @@ module.exports = (app) => {
             } else {
                 let chips = await Payment.findOne({ paytm_no: authData.user.ph });
                 const totalchips = chips.amount;
-                // const userId = chips._id
-                // try {
                 if (totalchips > amount) {
                     const newChallenge = new Challenge({
                         name,
