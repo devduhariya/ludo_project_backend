@@ -35,7 +35,7 @@ module.exports = (app) => {
         return a - b;
     }
 
-    app.post('/api/sellChips', auth, async (req, res) => {
+    app.put('/api/sellChips', auth, async (req, res) => {
         const { paytm_no, amount } = req.body;
         // Simple validation
         if (!paytm_no || !amount) {
