@@ -12,24 +12,6 @@ const { findOne } = require('../../models/Payment');
 var router = Router()
 const JWT_SECRET = "secret";
 module.exports = (app) => {
-    // app.get('/api/setChallenge', auth, async (req, res) => {
-
-    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-    //         const name = authData.user.name;
-    //         if (err) {
-    //             res.sendStatus(403);
-    //         } else {
-    //             try {
-    //                 const challenge = await Challenge.find({ name });
-    //                 if (!challenge) throw Error('No queries');
-    //                 res.status(200).json(challenge);
-    //             } catch (e) {
-    //                 res.status(400).json({ msg: e.message });
-    //             }
-
-    //         }
-    //     });
-    // });
 
     app.get('/api/setChallenge/all', auth, async (req, res) => {
 
@@ -86,10 +68,7 @@ module.exports = (app) => {
                     );
                     const challenge = await newChallenge.save();
                     if (!challenge) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ challenge });
-
-
-
+                    res.status(200).json({ challenge,ans});
                 } else {
                     res.status(400).json({ message: "you don't have sufficient chips" })
                 }
