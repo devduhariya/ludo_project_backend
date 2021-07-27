@@ -27,9 +27,9 @@ module.exports = (app) => {
         });
     });
 
-    const AddAmount = function (a, b) {
-        return a - b;
-    }
+    // const AddAmount = function (a, b) {
+    //     return a + b;
+    // }
 
     const subtractChips = function (a, b) {
         return a - b;
@@ -54,7 +54,7 @@ module.exports = (app) => {
             const currentUser = await Payment.findOne({ paytm_no: authData.user.ph });
             const currentUserId = currentUser._id
             const currentUserAmount = currentUser.amount
-
+            let AddAmount = existAmount + amount
             console.log("currentUser",currentUserId);
             if (err) {
                 res.sendStatus(403);
@@ -69,7 +69,7 @@ module.exports = (app) => {
                     res.status(200).json({ sellChips });
                     await Payment.findByIdAndUpdate(chipsId,
                         {
-                            amount: AddAmount(existAmount, amount)
+                            amount: AddAmount
                         },
                         { new: true }
                     );
