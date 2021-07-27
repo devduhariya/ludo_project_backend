@@ -61,19 +61,19 @@ module.exports = (app) => {
             } else {
                 try {
 
-                    let res1 = await Payment.findByIdAndUpdate(chipsId,
-                        {
-                            amount: AddAmount
-                        },
-                        // { new: true }
-                    );
-                    let res2 = await Payment.findByIdAndUpdate(currentUserId,
+                   
+                    let res1 = await Payment.findByIdAndUpdate(currentUserId,
                         {
                             amount: subtractChips(currentUserAmount, amount)
                         },
-                        // { new: true }
+                        { new: true }
                     );
-
+                    let res2 = await Payment.findByIdAndUpdate(chipsId,
+                        {
+                            amount: AddAmount
+                        },
+                        { new: true }
+                    );
                     const newSellChips = new SellChips({
                         paytm_no,
                         amount
