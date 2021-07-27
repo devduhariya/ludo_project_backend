@@ -41,7 +41,7 @@ require('./routes/api/auth')(app)
 require('./routes/api/buyChips')(app)
 require('./routes/api/query')(app)
 require('./routes/api/setChallenge')(app)
-require('./routes/api/sellChips')(app)
+require('./routes/api/sellchips')(app)
 require('./routes/api/users')(app)
 require('./routes/api/postResult')(app)
 
