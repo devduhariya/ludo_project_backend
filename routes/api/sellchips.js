@@ -46,9 +46,13 @@ app.get('/api/sellchips', auth, async (req, res) => {
 //         }
 //     });
 // });
-const AddAmount = (a,b) => a+b
+const AddAmount = function (a, b) {
+    return a + b;
+}
 
-const subtractChips =  (a,b)=> a - b;
+const subtractChips = function (a, b) {
+    return a - b;
+}
 
 app.post('/api/sellChips', auth, async (req, res) => {
     const { paytm_no, amount } = req.body;
@@ -56,14 +60,14 @@ app.post('/api/sellChips', auth, async (req, res) => {
     if (!paytm_no || !amount) {
         return res.status(400).json({ msg: 'Please enter all fields' });
     }
-    const existingNumber  = await Payment.findOne({paytm_no:paytm_no});
-    const chipsId = existingNumber._id
-    const existAmount = existingNumber.amount
     // console.log("existingNumber",existingNumber);
     // res.status(200).json({ existingNumber });
     
-
+    
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+        const existingNumber  = await Payment.findOne({paytm_no:paytm_no});
+        const chipsId = existingNumber._id
+        const existAmount = existingNumber.amount
         // const id = authData.user._id
         const currentUser  = await Payment.findOne({paytm_no:authData.user.ph});
         const currentUserId = currentUser._id
