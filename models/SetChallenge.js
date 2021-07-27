@@ -14,6 +14,9 @@ const SetChallenge = new Schema({
     },
     paytm_no:{
         type :Number
+    },
+    challengeAmount:{
+        type:Number
     }
 });
 const Challenge = model('Challenge', SetChallenge);
