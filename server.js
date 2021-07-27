@@ -36,7 +36,7 @@ mongoose.connect(process.env.Mongo_Url || "mongodb+srv://ludo:ludo@ludo.cxaqe.mo
 
 
 
-app.use(bodyParser.json());
+app.use(express.json());
 require('./routes/api/auth')(app)
 require('./routes/api/buyChips')(app)
 require('./routes/api/query')(app)
