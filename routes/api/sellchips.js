@@ -97,7 +97,7 @@ app.post('/api/sellChips', auth, async (req, res) => {
                     },
                     { new: true }
                 );
-                res.status(200).json({ sellChips,result1,result2});
+                res.status(200).json({sellChips});
             } catch (e) {
                 res.status(400).json({ msg: e.message });
             }
