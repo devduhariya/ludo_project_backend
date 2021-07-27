@@ -46,6 +46,9 @@ app.get('/api/sellchips', auth, async (req, res) => {
 //         }
 //     });
 // });
+const AddAmount = (a,b) => a+b
+
+const subtractChips =  (a,b)=> a - b;
 
 app.post('/api/sellChips', auth, async (req, res) => {
     const { paytm_no, amount } = req.body;
@@ -53,11 +56,20 @@ app.post('/api/sellChips', auth, async (req, res) => {
     if (!paytm_no || !amount) {
         return res.status(400).json({ msg: 'Please enter all fields' });
     }
-    const existingNumber  = await Payment.find({paytm_no});
-    res.status(200).json({ existingNumber });
+    const existingNumber  = await Payment.findOne({paytm_no:paytm_no});
+    const chipsId = existingNumber._id
+    const existAmount = existingNumber.amount
+    // console.log("existingNumber",existingNumber);
+    // res.status(200).json({ existingNumber });
+    
+
     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-        const id = authData.user._id
-        console.log("id",id);
+        // const id = authData.user._id
+        const currentUser  = await Payment.findOne({paytm_no:authData.user.ph});
+        const currentUserId = currentUser._id
+        const currentUserAmount = currentUser.amount
+
+        // console.log("id",id);
         if (err) {
             res.sendStatus(403);
         } else {
@@ -68,7 +80,20 @@ app.post('/api/sellChips', auth, async (req, res) => {
                 });
                 const sellChips = await newSellChips.save();
                 if (!sellChips) throw Error('Something went wrong saving the challenge');
-                res.status(200).json({ sellChips,authData });
+
+                const result1 = await Payment.findByIdAndUpdate(chipsId,
+                    {
+                        amount: AddAmount(existAmount, amount)
+                    },
+                    { new: true }
+                );
+                const result2 = await Payment.findByIdAndUpdate(currentUserId,
+                    {
+                        amount: subtractChips(currentUserAmount, amount)
+                    },
+                    { new: true }
+                );
+                res.status(200).json({ sellChips,result1,result2});
             } catch (e) {
                 res.status(400).json({ msg: e.message });
             }
