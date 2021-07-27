@@ -54,8 +54,8 @@ module.exports = (app) => {
             const currentUser = await Payment.findOne({ paytm_no: authData.user.ph });
             const currentUserId = currentUser._id
             const currentUserAmount = currentUser.amount
-            let AddAmount = existAmount + amount
-            console.log("currentUser",currentUserId);
+            let AddAmount = parseInt(existAmount + amount)
+            console.log("currentUser",AddAmount);
             if (err) {
                 res.sendStatus(403);
             } else {
@@ -66,20 +66,20 @@ module.exports = (app) => {
                     });
                     const sellChips = await newSellChips.save();
                     if (!sellChips) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ sellChips });
-                    await Payment.findByIdAndUpdate(chipsId,
+                    
+                   let res1 = await Payment.findByIdAndUpdate(chipsId,
                         {
                             amount: AddAmount
                         },
                         { new: true }
                     );
-                    await Payment.findByIdAndUpdate(currentUserId,
+                    let res2 = await Payment.findByIdAndUpdate(currentUserId,
                         {
                             amount: subtractChips(currentUserAmount, amount)
                         },
                         { new: true }
                     );
-
+                    res.status(200).json({ sellChips,res1,res2 });
                 } catch (e) {
                     res.status(400).json({ msg: e.message });
                 }
