@@ -27,15 +27,15 @@ module.exports = (app) => {
         });
     });
 
-    // const AddAmount = function (a, b) {
-    //     return a + b;
-    // }
+    const AddAmount = function (a, b) {
+        return a + b;
+    }
 
     const subtractChips = function (a, b) {
         return a - b;
     }
 
-    app.put('/api/sellChips', auth, async (req, res) => {
+    app.post('/api/sellChips', auth, async (req, res) => {
         const { paytm_no, amount } = req.body;
         // Simple validation
         if (!paytm_no || !amount) {
@@ -54,8 +54,8 @@ module.exports = (app) => {
             const currentUser = await Payment.findOne({ paytm_no: authData.user.ph });
             const currentUserId = currentUser._id
             const currentUserAmount = currentUser.amount
-            let AddAmount = parseInt(existAmount + amount)
-            console.log("currentUser", AddAmount);
+            // let AddAmount = parseInt(existAmount + amount)
+            // console.log("currentUser", AddAmount);
             if (err) {
                 res.sendStatus(403);
             } else {
@@ -64,13 +64,13 @@ module.exports = (app) => {
                    
                     let res1 = await Payment.findByIdAndUpdate(currentUserId,
                         {
-                            amount: subtractChips(currentUserAmount, amount)
+                            amount: AddAmount(currentUserAmount, amount)
                         },
                         { new: true }
                     );
                     let res2 = await Payment.findByIdAndUpdate(chipsId,
                         {
-                            amount: AddAmount
+                            amount: subtractChips(currentUserAmount, amount)
                         },
                         { new: true }
                     );
@@ -80,7 +80,7 @@ module.exports = (app) => {
                     });
                     const sellChips = await newSellChips.save();
                     if (!sellChips) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ sellChips, res1, res2 });
+                    res.status(200).json({ sellChips, res1,res2 });
                 } catch (e) {
                     res.status(400).json({ msg: e.message });
                 }
