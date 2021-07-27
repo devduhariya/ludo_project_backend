@@ -48,38 +48,39 @@ module.exports = (app) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const existingNumber = await Payment.findOne({ paytm_no: paytm_no });
             const chipsId = existingNumber._id
-            console.log("existingNumber",chipsId)
+            console.log("existingNumber", chipsId)
             const existAmount = existingNumber.amount
             // const id = authData.user._id
             const currentUser = await Payment.findOne({ paytm_no: authData.user.ph });
             const currentUserId = currentUser._id
             const currentUserAmount = currentUser.amount
             let AddAmount = parseInt(existAmount + amount)
-            console.log("currentUser",AddAmount);
+            console.log("currentUser", AddAmount);
             if (err) {
                 res.sendStatus(403);
             } else {
                 try {
+
+                    let res1 = await Payment.findByIdAndUpdate(chipsId,
+                        {
+                            amount: AddAmount
+                        },
+                        // { new: true }
+                    );
+                    let res2 = await Payment.findByIdAndUpdate(currentUserId,
+                        {
+                            amount: subtractChips(currentUserAmount, amount)
+                        },
+                        // { new: true }
+                    );
+
                     const newSellChips = new SellChips({
                         paytm_no,
                         amount
                     });
                     const sellChips = await newSellChips.save();
                     if (!sellChips) throw Error('Something went wrong saving the challenge');
-                    
-                   let res1 = await Payment.findByIdAndUpdate(chipsId,
-                        {
-                            amount: AddAmount
-                        },
-                        { new: true }
-                    );
-                    let res2 = await Payment.findByIdAndUpdate(currentUserId,
-                        {
-                            amount: subtractChips(currentUserAmount, amount)
-                        },
-                        { new: true }
-                    );
-                    res.status(200).json({ sellChips,res1,res2 });
+                    res.status(200).json({ sellChips, res1, res2 });
                 } catch (e) {
                     res.status(400).json({ msg: e.message });
                 }
