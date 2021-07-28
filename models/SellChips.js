@@ -8,7 +8,10 @@ const SellChipsSchema = new Schema({
     amount: {
         type: Number,
         required: true
-    }
+    },
+    status: {
+        type: String
+     },
 });
 const SellChips = model('SellChips', SellChipsSchema);
 module.exports = SellChips;
