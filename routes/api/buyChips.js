@@ -82,7 +82,6 @@ module.exports = (app) => {
 
         let amount = product.amount
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
-        let existAmount = chips.amount;
         const chipsId = chips._id
         // if (product.status === 'Accepted') {
         //     const result1 = await Payment.findByIdAndUpdate(chipsId,
@@ -94,6 +93,7 @@ module.exports = (app) => {
         //     res.send(result1);
         // } else 
         if (product.status === 'pending') {
+            let existAmount = chips.amount;
             await Payment.findByIdAndUpdate(id,
                 {
                     status: Status
@@ -110,6 +110,8 @@ module.exports = (app) => {
             );
             res.send(result1);
 
+        }else{
+            res.sendStatus(403);
         }
     });
     app.delete('/api/buychips/:id', async (req, res) => {
