@@ -48,7 +48,7 @@ module.exports = (app) => {
         if (!paytm_no || !txn_ID || !amount) {
             return res.status(400).json({ msg: 'Please enter all fields' });
         }
-        console.log("reeq body",req.body)
+        // console.log("reeq body",req.body)
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             if (err) {
                 res.sendStatus(403);
@@ -82,7 +82,8 @@ module.exports = (app) => {
 
         let amount = product.amount
         let chips = await Payment.findOne({ paytm_no: product.paytm_no });
-        const chipsId = chips._id
+        const chipsId = chips._id;
+        let existAmount = chips.amount;
         // if (product.status === 'Accepted') {
         //     const result1 = await Payment.findByIdAndUpdate(chipsId,
         //         {
@@ -93,7 +94,7 @@ module.exports = (app) => {
         //     res.send(result1);
         // } else 
         if (product.status === 'pending') {
-            let existAmount = chips.amount;
+            
             await Payment.findByIdAndUpdate(id,
                 {
                     status: Status

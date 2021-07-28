@@ -118,7 +118,7 @@ module.exports = (app) => {
                     } else {
                         res.status(400).send({ message: "no request" })
                     }
-                    const Admin = 9876543210
+                    const Admin = 7357525272
                     let chips = await Payment.findOne({ paytm_no: Admin });
                     let AdminId = chips._id
                     const adminChips = chips.amount
@@ -147,5 +147,19 @@ module.exports = (app) => {
             res.status(400).send({ message: "no request" })
         }
     });
+
+    // app.get('/api/setChallenge/:id',auth, async (req, res) => {
+    //     const id = req.params.id;
+    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+    //     const product = await Challenge.findById({ _id: id })
+    //     if (product) {
+    //         // await Challenge.deleteOne({ _id: id });
+    //         res.status(200).send({product});
+    //     } else {
+    //         res.status(400).send({ message: "no request" })
+    //     }
+    // })
+    // });
+
 
 }
