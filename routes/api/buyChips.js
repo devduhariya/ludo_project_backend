@@ -61,7 +61,7 @@ module.exports = (app) => {
                     });
                     newPayment.status = "pending"
                     const payment = await newPayment.save();
-                    console.log("New Paymewnt",newPayment)
+                    console.log("New Paymewnt", newPayment)
                     if (!payment) throw Error('error while saving payment');
                     res.status(200).json({ payment });
                 } catch (e) {
@@ -81,9 +81,10 @@ module.exports = (app) => {
         const product = await Payment.findById({ _id: id })
 
         let amount = product.amount
-        let chips = await Payment.findOne({ paytm_no: product.paytm_no });
-        const chipsId = chips._id;
-        let existAmount = chips.amount;
+        console.log("product", product);
+        // let chips = await Payment.findOne({ paytm_no: product.paytm_no });
+        // const chipsId = chips._id;
+        // let existAmount = chips.amount;
         // if (product.status === 'Accepted') {
         //     const result1 = await Payment.findByIdAndUpdate(chipsId,
         //         {
@@ -94,24 +95,49 @@ module.exports = (app) => {
         //     res.send(result1);
         // } else 
         if (product.status === 'pending') {
-            
-            await Payment.findByIdAndUpdate(id,
-                {
-                    status: Status
-                },
-                { new: true }
-            );
-            // res.send(result2);
+            let chips = await Payment.findOne({ paytm_no: product.paytm_no });
+            console.log("chips", chips)
+            if (chips.status === "pending") {
+                const chipsId = chips._id;
+                let existAmount = 0;
+                await Payment.findByIdAndUpdate(id,
+                    {
+                        status: Status
+                    },
+                    { new: true }
+                );
+                // res.send(result2);
 
-            const result1 = await Payment.findByIdAndUpdate(chipsId,
-                {
-                    amount: AddAmount(existAmount, amount)
-                },
-                { new: true }
-            );
-            res.send(result1);
+                const result1 = await Payment.findByIdAndUpdate(chipsId,
+                    {
+                        amount: AddAmount(existAmount, amount)
+                    },
+                    { new: true }
+                );
+                res.send(result1);
+            }
+            else{
+                const chipsId = chips._id;
+                let existAmount = chips.amount;
+                await Payment.findByIdAndUpdate(id,
+                    {
+                        status: Status
+                    },
+                    { new: true }
+                );
+                // res.send(result2);
 
-        }else{
+                const result1 = await Payment.findByIdAndUpdate(chipsId,
+                    {
+                        amount: AddAmount(existAmount, amount)
+                    },
+                    { new: true }
+                );
+                res.send(result1);
+
+            }
+
+        } else {
             res.sendStatus(403);
         }
     });
