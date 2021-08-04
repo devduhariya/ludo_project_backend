@@ -10,7 +10,6 @@ const SetChallenge = new Schema({
     },
     roomCode:{
         type :Number,
-        required: true
     },
     paytm_no:{
         type :Number
