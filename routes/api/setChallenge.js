@@ -13,7 +13,7 @@ var router = Router()
 const JWT_SECRET = "secret";
 module.exports = (app) => {
 
-    app.get('/api/setChallenge/all', auth, async (req, res) => {
+    app.get('/api/setChallenge', auth, async (req, res) => {
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             // const name = authData.user.name;
@@ -30,6 +30,45 @@ module.exports = (app) => {
             }
         });
     });
+
+
+    app.get('/api/setChallenge/all', auth, async (req, res) => {
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            // const Role = authData.user.role;
+            const allTranctions = await Challenge.find();
+
+            let allTranctionSatus = null;
+            let tranctionsWithStatusPending = [];
+
+            if (err) {
+                res.sendStatus(403);
+            }
+            else {
+                // if (Role === 'admin') {
+                    try {
+                        for (let i = 0; i < allTranctions.length; i++) {
+                            allTranctionSatus = allTranctions[i].status;
+                            if (allTranctionSatus === "pending") {
+
+                                tranctionsWithStatusPending.push(allTranctions[i])
+                            }
+                        }
+                        return res.status(200).json(
+                            tranctionsWithStatusPending
+                        );
+                    } catch (e) {
+                        res.status(400).json({ msg: e.message });
+                    }
+                // }
+                // else {
+                //     res.sendStatus(401);
+                // }
+            }
+        });
+    });
+
+
+
 
     const subtractCurrentUserChips = function (a, b) {
         return a - b;
