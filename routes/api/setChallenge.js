@@ -36,7 +36,7 @@ module.exports = (app) => {
     }
     app.post('/api/setChallenge', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-            const { amount} = req.body;
+            const { amount, roomCode } = req.body;
             const name = authData.user.name;
             const paytm_no = authData.user.ph
 
@@ -67,7 +67,7 @@ module.exports = (app) => {
                     );
                     const challenge = await newChallenge.save();
                     if (!challenge) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ challenge,ans});
+                    res.status(200).json({ challenge, ans });
                 } else {
                     res.status(400).json({ message: "you don't have sufficient chips" })
                 }
@@ -101,9 +101,9 @@ module.exports = (app) => {
             else {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
-                } 
-                if(sameUser == challengeSetterUser){
-                    res.status(404).json({message:'you cannot play challnge set by own'})
+                }
+                if (sameUser == challengeSetterUser) {
+                    res.status(404).json({ message: 'you cannot play challnge set by own' })
                 }
                 else {
                     const ans = await Payment.findByIdAndUpdate(userId,
@@ -121,12 +121,12 @@ module.exports = (app) => {
                         //await Challenge.deleteOne({ _id: id });
                         const changeStatus = await Challenge.findByIdAndUpdate(userId1,
                             {
-                                status:Status,
+                                status: Status,
                             },
                             { new: true }
                         );
-                        res.status(200).json({findChallenge,changeStatus});
-                    } else{
+                        res.status(200).json({ findChallenge, changeStatus });
+                    } else {
                         res.status(404)
                     }
                     // if(findChallenge.status === "Accepted") {
@@ -151,29 +151,40 @@ module.exports = (app) => {
 
     });
 
-    app.put('/api/roomCode:id', auth, async (req, res) => {
+    app.put('/api/roomCode/:id', auth, async (req, res) => {
 
         const id = req.params.id;
-        const { roomCode} = req.body
+        const { roomCode } = req.body
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             // const product = await Challenge.findById({ _id: id })
             // const user1 = authData.user.ph
             // console.log("product", product.user1)
-            const result1 = await Challenge.findByIdAndUpdate(id,
-                {
-                    roomCode
-                },
-                { new: true }
-            );
-            res.send(result1);
+            const product = await Challenge.findById(id)
+            // console.log("product.roomCode",product.roomCode)
+            const challengeSetterUser = product.paytm_no
+            if (challengeSetterUser === authData.user.ph) {
+                const result1 = await Challenge.findByIdAndUpdate(id,
+                    {
+                        roomCode
+                    },
+                    { new: true }
+                );
+                res.send(result1);
+            } else {
+                // const getChallengeRoomcode = await Challenge.findById(id)
+                res.json(product.roomCode);
+                // console.log("product.roomCodeeeee",getChallengeRoomcode)
+            }
+
+
             // }
         });
 
     });
 
 
-    
+
     app.delete('/api/setChallenge/:id', async (req, res) => {
         const id = req.params.id;
 
