@@ -41,8 +41,6 @@ module.exports = (app) => {
             const paytm_no = authData.user.ph
 
 
-
-
             // console.log("authdata.user", authData.user.ph, authData.user.name)
             if (err) {
                 res.sendStatus(403);
@@ -57,6 +55,7 @@ module.exports = (app) => {
                         name,
                         amount,
                         paytm_no,
+                        roomCode
                     });
                     newChallenge.status = "pending"
                     const ans = await Payment.findByIdAndUpdate(userId,
@@ -151,6 +150,30 @@ module.exports = (app) => {
         });
 
     });
+
+    app.put('/api/roomCode:id', auth, async (req, res) => {
+
+        const id = req.params.id;
+        const { roomCode} = req.body
+
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            // const product = await Challenge.findById({ _id: id })
+            // const user1 = authData.user.ph
+            // console.log("product", product.user1)
+            const result1 = await Challenge.findByIdAndUpdate(id,
+                {
+                    roomCode
+                },
+                { new: true }
+            );
+            res.send(result1);
+            // }
+        });
+
+    });
+
+
+    
     app.delete('/api/setChallenge/:id', async (req, res) => {
         const id = req.params.id;
 
