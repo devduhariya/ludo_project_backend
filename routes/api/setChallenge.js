@@ -116,18 +116,17 @@ module.exports = (app) => {
                     );
 
                     const findChallenge = await Challenge.findById(id);
-                    const userId = findChallenge._id
+                    const userId1 = findChallenge._id
                     //    console.log('findChallenge',findChallenge)
                     if (findChallenge.status === "pending") {
                         //await Challenge.deleteOne({ _id: id });
-                        const changeStatus = await Challenge.findById(userId,
+                        const changeStatus = await Challenge.findByIdAndUpdate(userId1,
                             {
-                                status:Status
-    
+                                status:Status,
                             },
                             { new: true }
                         );
-                        res.status(200).json({ans,findChallenge,changeStatus});
+                        res.status(200).json({findChallenge,changeStatus});
                     } else{
                         res.status(404)
                     }
