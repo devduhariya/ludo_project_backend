@@ -36,7 +36,7 @@ module.exports = (app) => {
     }
     app.post('/api/setChallenge', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-            const { amount, roomCode } = req.body;
+            const { amount} = req.body;
             const name = authData.user.name;
             const paytm_no = authData.user.ph
 
@@ -56,9 +56,9 @@ module.exports = (app) => {
                     const newChallenge = new Challenge({
                         name,
                         amount,
-                        roomCode,
                         paytm_no,
                     });
+                    newChallenge.status = "pending"
                     const ans = await Payment.findByIdAndUpdate(userId,
                         {
                             amount: subtractCurrentUserChips(totalchips, amount)
@@ -85,15 +85,16 @@ module.exports = (app) => {
     }
     app.put('/api/setChallenge/:id', auth, async (req, res) => {
         const id = req.params.id;
-
+        const Status = "Accepted";
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
 
             const product = await Challenge.findById({ _id: id })
             // let winningAmount = null
+            const sameUser = product.paytm_no
             const challengeAmount = product.amount
             const result = await Payment.findOne({ paytm_no: authData.user.ph })
             const userId = result._id;
-
+            const challengeSetterUser = authData.user.ph
             const currentUserAmount = result.amount
             if (err) {
                 res.sendStatus(403);
@@ -101,7 +102,11 @@ module.exports = (app) => {
             else {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
-                } else {
+                } 
+                if(sameUser == challengeSetterUser){
+                    res.status(404).json({message:'you cannot play challnge set by own'})
+                }
+                else {
                     const ans = await Payment.findByIdAndUpdate(userId,
                         {
                             amount: subtractChips(currentUserAmount, challengeAmount)
@@ -110,26 +115,38 @@ module.exports = (app) => {
                         { new: true }
                     );
 
-                    const removeChallenge = await Challenge.findById({ _id: id })
-
-                    if (removeChallenge) {
-                        //await Challenge.deleteOne({ _id: id });
-                        res.status(200).send(ans);
-                    } else {
-                        res.status(400).send({ message: "no request" })
-                    }
-                    const Admin = 7357525272
-                    let chips = await Payment.findOne({ paytm_no: Admin });
-                    let AdminId = chips._id
-                    const adminChips = chips.amount
-                    const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
-                        {
-                            amount: Totalchips(adminChips, challengeAmount, challengeAmount)
-
-                        },
-                        { new: true }
+                    const findChallenge = await Challenge.findById(id,
+                        
                     );
-                    res.json(addChipsToAdmin)
+                        // const findChallenge =await  Challenge.find
+                    if (findChallenge.status === "pending") {
+                        //await Challenge.deleteOne({ _id: id });
+                        const changeStatus = await Challenge.findById(id,
+                            {
+                                status:Status
+    
+                            },
+                            { new: true }
+                        );
+                        res.status(200).json({ans,findChallenge,changeStatus});
+                    } else{
+                        res.status(404)
+                    }
+                    // if(findChallenge.status === "Accepted") {
+                    //     await Challenge.findOneAndDelete(id);
+                    // }
+                    // const Admin = 7357525272
+                    // let chips = await Payment.findOne({ paytm_no: Admin });
+                    // let AdminId = chips._id
+                    // const adminChips = chips.amount
+                    // const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
+                    //     {
+                    //         amount: Totalchips(adminChips, challengeAmount, challengeAmount)
+
+                    //     },
+                    //     { new: true }
+                    // );
+                    // res.json(addChipsToAdmin)
 
                 }
             }

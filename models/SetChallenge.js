@@ -16,6 +16,9 @@ const SetChallenge = new Schema({
     },
     challengeAmount:{
         type:Number
+    },
+    status:{
+        type:String
     }
 });
 const Challenge = model('Challenge', SetChallenge);
