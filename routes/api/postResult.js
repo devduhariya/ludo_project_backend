@@ -30,10 +30,10 @@ module.exports = (app) => {
             const currentUserAmount = ans.amount
             const { result, screenshots } = req.body
 
-            if (err) {
-                res.sendStatus(403);
-            }
-            else {
+            // if (err) {
+            //     res.sendStatus(403);
+            // }
+            // else {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
                 } else {
@@ -58,7 +58,7 @@ module.exports = (app) => {
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
                     res.status(200).json({ GameResult });
 
-                }
+                // }
             }
         });
 

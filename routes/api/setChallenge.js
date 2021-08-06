@@ -35,13 +35,13 @@ module.exports = (app) => {
     app.get('/api/setChallenge/all', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
 
-        //     const product = await Challenge.find()
-        // if (product) {
-        //     // await Challenge.deleteOne({ _id: id });
-        //     res.status(200).json(product);
-        // } else {
-        //     res.status(400).send({ message: "no request"})
-        // }
+            //     const product = await Challenge.find()
+            // if (product) {
+            //     // await Challenge.deleteOne({ _id: id });
+            //     res.status(200).json(product);
+            // } else {
+            //     res.status(400).send({ message: "no request"})
+            // }
 
 
             // const Role = authData.user.role;
@@ -174,7 +174,7 @@ module.exports = (app) => {
                             },
                             { new: true }
                         );
-                        res.status(200).json({changeStatus });
+                        res.status(200).json({ changeStatus });
                     } else {
                         res.status(404)
                     }
@@ -276,17 +276,17 @@ module.exports = (app) => {
         }
     });
 
-    app.get('/api/getChallenges',auth, async (req, res) => {
+    app.get('/api/getChallenges', auth, async (req, res) => {
         // const id = req.params.id;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-        const product = await Challenge.find()
-        if (product.status == "pending") {
-            // await Challenge.deleteOne({ _id: id });
-            res.status(200).send({product});
-        } else {
-            res.status(400).send({ message: "no request" ,product})
-        }
-    })
+            const product = await Challenge.find()
+            if (product.status == "pending") {
+                // await Challenge.deleteOne({ _id: id });
+                res.status(200).send({ product });
+            } else {
+                res.status(400).send({ message: "no request", product })
+            }
+        })
     });
 
 
