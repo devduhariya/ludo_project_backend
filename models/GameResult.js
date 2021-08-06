@@ -7,8 +7,13 @@ const ResultSchema = new Schema({
                 type: String,
             },
 
-            result: {
-                type: String,
+            won: {
+                type: Boolean,
+                default: false
+            },
+            lost: {
+                type: Boolean,
+                default: false
             },
             screenshots: {
                 type: String
@@ -21,8 +26,13 @@ const ResultSchema = new Schema({
             user2: {
                 type: String,
             },
-            result: {
-                type: String,
+            won: {
+                type: Boolean,
+                default: false
+            },
+            lost: {
+                type: Boolean,
+                default: false
             },
             screenshots: {
                 type: String

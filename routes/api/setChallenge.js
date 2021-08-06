@@ -45,20 +45,20 @@ module.exports = (app) => {
             }
             else {
                 // if (Role === 'admin') {
-                    try {
-                        for (let i = 0; i < allTranctions.length; i++) {
-                            allTranctionSatus = allTranctions[i].status;
-                            if (allTranctionSatus === "pending") {
+                try {
+                    for (let i = 0; i < allTranctions.length; i++) {
+                        allTranctionSatus = allTranctions[i].status;
+                        if (allTranctionSatus === "pending") {
 
-                                tranctionsWithStatusPending.push(allTranctions[i])
-                            }
+                            tranctionsWithStatusPending.push(allTranctions[i])
                         }
-                        return res.status(200).json(
-                            tranctionsWithStatusPending
-                        );
-                    } catch (e) {
-                        res.status(400).json({ msg: e.message });
                     }
+                    return res.status(200).json(
+                        tranctionsWithStatusPending
+                    );
+                } catch (e) {
+                    res.status(400).json({ msg: e.message });
+                }
                 // }
                 // else {
                 //     res.sendStatus(401);
