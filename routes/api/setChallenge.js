@@ -141,9 +141,9 @@ module.exports = (app) => {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
                 }
-                // if (sameUser == challengeSetterUser) {
-                //     res.status(404).json({ message: 'you cannot play challnge set by own' })
-                // }
+                if (sameUser == challengeSetterUser) {
+                    res.status(404).json({ message: 'you cannot play challnge set by own' })
+                }
                 else {
                     const ans = await Payment.findByIdAndUpdate(userId,
                         {
