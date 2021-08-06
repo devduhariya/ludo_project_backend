@@ -6,18 +6,88 @@ const Payment = require('../../models/Payment');
 const auth = require('../../middleware/auth')
 const Result = require('../../models/GameResult')
 const Challenge = require('../../models/SetChallenge');
-const { findOne } = require('../../models/Payment');
+// const { findOne } = require('../../models/Payment');
+const multer = require('multer')
 const JWT_SECRET = "secret";
+const DIR = './public/';
+// const uuidv4 = require('uuid');
 module.exports = (app) => {
+
+
+    const storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, DIR);
+        },
+        filename: (req, file, cb) => {
+            const fileName = file.originalname.toLowerCase().split(' ').join('-');
+            cb(null, Date.now() + '-' + fileName)
+        }
+    });
+    
+    var upload = multer({
+        storage: storage,
+        fileFilter: (req, file, cb) => {
+            if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+                cb(null, true);
+            } else {
+                cb(null, false);
+                return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+            }
+        }
+    });
+    
+    // User model
+    // let User = require('../models/User');
+    
+    // app.post('/user-profile', upload.array('screenshots',10), (req, res, next) => {
+    //     const url = req.protocol + '://' + req.get('host')
+    //     const user = new User({
+    //         _id: new mongoose.Types.ObjectId(),
+    //         name: req.body.name,
+    //         profileImg: url + '/public/' + req.file.filename
+    //     });
+    //     user.save().then(result => {
+    //         res.status(201).json({
+    //             message: "User registered successfully!",
+    //             userCreated: {
+    //                 _id: result._id,
+    //                 profileImg: result.profileImg
+    //             }
+    //         })
+    //     }).catch(err => {
+    //         console.log(err),
+    //             res.status(500).json({
+    //                 error: err
+    //             });
+    //     })
+    // })
+    
+    // router.get("/", (req, res, next) => {
+    //     User.find().then(data => {
+    //         res.status(200).json({
+    //             message: "User list retrieved successfully!",
+    //             users: data
+    //         });
+    //     });
+    // });
+
+
+
+
+
+
+
+
+
 
     const subtractChips = function (a, b) {
         return a - b;
     }
     const TotalAmount = (a) => a + a
 
-    app.post('/api/result/:id', auth, async (req, res) => {
+    app.post('/api/result/:id', auth, upload.single('screenshots'), async (req, res) => {
         const id = req.params.id;
-
+        const url = req.protocol + '://' + req.get('host')
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Challenge.findById({ _id: id })
 
@@ -28,12 +98,12 @@ module.exports = (app) => {
             const userId = ans._id;
             let user2 = ans.paytm_no
             const currentUserAmount = ans.amount
-            const { result, screenshots } = req.body
+            const { won,lost} = req.body
 
-            // if (err) {
-            //     res.sendStatus(403);
-            // }
-            // else {
+            if (err) {
+                res.sendStatus(403);
+            }
+            else {
                 if (challengeAmount > currentUserAmount) {
                     res.status(400).json({ message: 'insufficient chips' });
                 } else {
@@ -47,27 +117,30 @@ module.exports = (app) => {
                     const newResult = new Result({
                         user2: {
                             user2,
-                            result,
-                            screenshots
+                            won,
+                            lost,
+                            screenshots: url + '/public/' + req.file.filename
                         },
 
                         challengeAmount: TotalAmount(challengeAmount)
 
                     });
+                    console.log(newResult);
                     const GameResult = await newResult.save();
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
                     res.status(200).json({ GameResult });
 
-                // }
+                }
             }
         });
 
     });
 
-    app.put('/api/result/:id', auth, async (req, res) => {
+    app.put('/api/result/:id', auth, upload.single('screenshots'), async (req, res) => {
 
         const id = req.params.id;
-        const { result, screenshots } = req.body
+        const url = req.protocol + '://' + req.get('host');
+        const { won,lost} = req.body
 
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
@@ -78,8 +151,9 @@ module.exports = (app) => {
                 {
                     user1: {
                         user1,
-                        result,
-                        screenshots
+                        won,
+                        lost,
+                        screenshots: url + '/public/' + req.file.filename
                     },
                 },
                 { new: true }
@@ -96,7 +170,7 @@ module.exports = (app) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             
             try {
-                const query = await Challenge.find({paytm_no:authData.user.ph});
+                const query = await Result.find();
                 if (!query) throw Error('No queries');
 
                 res.status(200).json(query);

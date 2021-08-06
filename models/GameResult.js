@@ -8,12 +8,10 @@ const ResultSchema = new Schema({
             },
 
             won: {
-                type: Boolean,
-                default: false
+                type: Boolean
             },
             lost: {
                 type: Boolean,
-                default: false
             },
             screenshots: {
                 type: String
@@ -27,12 +25,10 @@ const ResultSchema = new Schema({
                 type: String,
             },
             won: {
-                type: Boolean,
-                default: false
+                type: Boolean
             },
             lost: {
                 type: Boolean,
-                default: false
             },
             screenshots: {
                 type: String
