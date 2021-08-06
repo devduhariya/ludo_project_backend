@@ -222,7 +222,7 @@ module.exports = (app) => {
                 res.send(result1);
             } else {
                 // const getChallengeRoomcode = await Challenge.findById(id)
-                res.json(product.roomCode);
+                res.json(product);
                 // console.log("product.roomCodeeeee",getChallengeRoomcode)
             }
 
