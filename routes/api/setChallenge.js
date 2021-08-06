@@ -35,45 +35,45 @@ module.exports = (app) => {
     app.get('/api/setChallenge/all', auth, async (req, res) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
 
-            const product = await Challenge.find()
-        if (product) {
-            // await Challenge.deleteOne({ _id: id });
-            res.status(200).json(product);
-        } else {
-            res.status(400).send({ message: "no request"})
-        }
+        //     const product = await Challenge.find()
+        // if (product) {
+        //     // await Challenge.deleteOne({ _id: id });
+        //     res.status(200).json(product);
+        // } else {
+        //     res.status(400).send({ message: "no request"})
+        // }
 
 
             // const Role = authData.user.role;
-        //     const allTranctions = await Challenge.find();
+            const allTranctions = await Challenge.find();
 
-        //     let allTranctionSatus = null;
-        //     let tranctionsWithStatusPending = [];
+            let allTranctionSatus = null;
+            let tranctionsWithStatusPending = [];
 
-        //     if (err) {
-        //         res.sendStatus(403);
-        //     }
-        //     else {
-        //         // if (Role === 'admin') {
-        //         try {
-        //             for (let i = 0; i < allTranctions.length; i++) {
-        //                 allTranctionSatus = allTranctions[i].status;
-        //                 if (allTranctionSatus === "pending") {
+            if (err) {
+                res.sendStatus(403);
+            }
+            else {
+                // if (Role === 'admin') {
+                try {
+                    for (let i = 0; i < allTranctions.length; i++) {
+                        allTranctionSatus = allTranctions[i].status;
+                        if (allTranctionSatus === "pending") {
 
-        //                     tranctionsWithStatusPending.push(allTranctions[i])
-        //                 }
-        //             }
-        //             return res.status(200).json(
-        //                 tranctionsWithStatusPending
-        //             );
-        //         } catch (e) {
-        //             res.status(400).json({ msg: e.message });
-        //         }
-        //         // }
-        //         // else {
-        //         //     res.sendStatus(401);
-        //         // }
-        //     }
+                            tranctionsWithStatusPending.push(allTranctions[i])
+                        }
+                    }
+                    return res.status(200).json(
+                        tranctionsWithStatusPending
+                    );
+                } catch (e) {
+                    res.status(400).json({ msg: e.message });
+                }
+                // }
+                // else {
+                //     res.sendStatus(401);
+                // }
+            }
         });
     });
 
