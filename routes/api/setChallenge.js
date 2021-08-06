@@ -164,7 +164,7 @@ module.exports = (app) => {
                             },
                             { new: true }
                         );
-                        res.status(200).json({ findChallenge, changeStatus });
+                        res.status(200).json({changeStatus });
                     } else {
                         res.status(404)
                     }
