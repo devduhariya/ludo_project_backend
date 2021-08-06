@@ -251,7 +251,7 @@ module.exports = (app) => {
                 //     },
                 //     { new: true }
                 // );
-                res.json(product.roomCode);
+                res.json(product);
             } else {
                 // const getChallengeRoomcode = await Challenge.findById(id)
                 res.status(404);
