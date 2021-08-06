@@ -38,9 +38,9 @@ module.exports = (app) => {
             const product = await Challenge.find()
         if (product) {
             // await Challenge.deleteOne({ _id: id });
-            res.status(200).send({product});
+            res.status(200).json(product);
         } else {
-            res.status(400).send({ message: "no request" ,product})
+            res.status(400).send({ message: "no request"})
         }
 
 
