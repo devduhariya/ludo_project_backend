@@ -222,7 +222,7 @@ module.exports = (app) => {
                 res.send(result1);
             } else {
                 // const getChallengeRoomcode = await Challenge.findById(id)
-                res.json(product);
+                res.status(404);
                 // console.log("product.roomCodeeeee",getChallengeRoomcode)
             }
 
@@ -232,7 +232,37 @@ module.exports = (app) => {
 
     });
 
+    app.get('/api/getRoomCode/:id', auth, async (req, res) => {
 
+        const id = req.params.id;
+        // const { roomCode } = req.body
+
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            // const product = await Challenge.findById({ _id: id })
+            // const user1 = authData.user.ph
+            // console.log("product", product.user1)
+            const product = await Challenge.findById(id)
+            // console.log("product.roomCode",product.roomCode)
+            const challengeSetterUser = product.paytm_no
+            if (challengeSetterUser !== authData.user.ph) {
+                // const result1 = await Challenge.findByIdAndUpdate(id,
+                //     {
+                //         roomCode
+                //     },
+                //     { new: true }
+                // );
+                res.json(product.roomCode);
+            } else {
+                // const getChallengeRoomcode = await Challenge.findById(id)
+                res.status(404);
+                // console.log("product.roomCodeeeee",getChallengeRoomcode)
+            }
+
+
+            // }
+        });
+
+    });
 
     app.delete('/api/setChallenge/:id', async (req, res) => {
         const id = req.params.id;
