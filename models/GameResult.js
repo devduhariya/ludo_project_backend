@@ -30,12 +30,12 @@ const ResultSchema = new Schema({
             lost: {
                 type: Boolean,
             },
-            screenshots: {
-                type: String
-            },
+            
         }
     ],
-
+    screenshots: {
+        type: String
+    },
 
     challengeAmount: {
         type: Number

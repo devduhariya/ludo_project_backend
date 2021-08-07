@@ -39,37 +39,35 @@ module.exports = (app) => {
     // User model
     // let User = require('../models/User');
     
-    // app.post('/user-profile', upload.array('screenshots',10), (req, res, next) => {
-    //     const url = req.protocol + '://' + req.get('host')
-    //     const user = new User({
-    //         _id: new mongoose.Types.ObjectId(),
-    //         name: req.body.name,
-    //         profileImg: url + '/public/' + req.file.filename
-    //     });
-    //     user.save().then(result => {
-    //         res.status(201).json({
-    //             message: "User registered successfully!",
-    //             userCreated: {
-    //                 _id: result._id,
-    //                 profileImg: result.profileImg
-    //             }
-    //         })
-    //     }).catch(err => {
-    //         console.log(err),
-    //             res.status(500).json({
-    //                 error: err
-    //             });
-    //     })
-    // })
+    app.post('/upload/:id', upload.single('screenshots'), (req, res, next) => {
+        const url = req.protocol + '://' + req.get('host')
+        const newResult = new Result({
+            screenshots: url + '/public/' + req.file.filename
+        });
+        newResult.save().then(result => {
+            res.status(201).json({
+                message: "User registered successfully!",
+                userCreated: {
+                    _id: result._id,
+                    screenshots: result.screenshots
+                }
+            })
+        }).catch(err => {
+            console.log(err),
+                res.status(500).json({
+                    error: err
+                });
+        })
+    })
     
-    // router.get("/", (req, res, next) => {
-    //     User.find().then(data => {
-    //         res.status(200).json({
-    //             message: "User list retrieved successfully!",
-    //             users: data
-    //         });
-    //     });
-    // });
+    app.get("/upload", (req, res, next) => {
+        Result.find().then(data => {
+            res.status(200).json({
+                message: "User list retrieved successfully!",
+                users: data
+            });
+        });
+    });
 
 
 
