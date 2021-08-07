@@ -63,21 +63,27 @@ module.exports = (app) => {
                     const currentUser = await Payment.findOne({ paytm_no: authData.user.ph });
                     const currentUserId = currentUser._id
                     const currentUserAmount = currentUser.amount
-                    let res1 = await Payment.findByIdAndUpdate(currentUserId,
-                        {
-                            amount: subtractChips(currentUserAmount, amount)
-                        },
-                        { new: true }
-                    );
-                    const newPayment = new SellChips({
-                        paytm_no,
-                        amount
-                    });
-                    newPayment.status = "pending"
-                    const payment = await newPayment.save();
-                    console.log("New Paymewnt", newPayment)
-                    if (!payment) throw Error('error while saving payment');
-                    res.status(200).json({ payment, res1 });
+                    if(currentUserAmount>=amount){
+                        let res1 = await Payment.findByIdAndUpdate(currentUserId,
+                            {
+                                amount: subtractChips(currentUserAmount, amount)
+                            },
+                            { new: true }
+                        );
+                        const newPayment = new SellChips({
+                            paytm_no,
+                            amount
+                        });
+                        newPayment.status = "pending"
+                        const payment = await newPayment.save();
+                        console.log("New Paymewnt", newPayment)
+                        if (!payment) throw Error('error while saving payment');
+                        res.status(200).json({ payment, res1 });
+                    }else{
+                        res.json({message:"insufficient chips"})
+                    }
+                   
+                   
                 } catch (e) {
                     res.status(400).json({ msg: e.message });
                 }
