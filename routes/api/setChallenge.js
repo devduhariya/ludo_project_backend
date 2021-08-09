@@ -99,7 +99,7 @@ module.exports = (app) => {
                 const userId = chips._id
                 // console.log("usewrId",userId)
                 // try {
-                if (totalchips > amount) {
+                if (totalchips >= amount) {
                     const newChallenge = new Challenge({
                         name,
                         amount,
@@ -178,9 +178,9 @@ module.exports = (app) => {
                     } else {
                         res.status(404)
                     }
-                    if(findChallenge.status === "Accepted") {
-                        await Challenge.findOneAndDelete(id);
-                    }
+                    // if(findChallenge.status === "Accepted") {
+                    //     await Challenge.findOneAndDelete(id);
+                    // }
                     const Admin = 7357525272
                     let chips = await Payment.findOne({ paytm_no: Admin });
                     let AdminId = chips._id
