@@ -93,25 +93,25 @@ module.exports = (app) => {
             const challengeAmount = product.amount
 
             const ans = await Payment.findOne({ paytm_no: authData.user.ph })
-            const userId = ans._id;
+            // const userId = ans._id;
             let user2 = ans.paytm_no
-            const currentUserAmount = ans.amount
+            // const currentUserAmount = ans.amount
             const { won} = req.body
 
             if (err) {
                 res.sendStatus(403);
             }
             else {
-                if (challengeAmount > currentUserAmount) {
-                    res.status(400).json({ message: 'insufficient chips' });
-                } else {
-                    const ans = await Payment.findByIdAndUpdate(userId,
-                        {
-                            amount: subtractChips(currentUserAmount, challengeAmount)
+                // if (challengeAmount > currentUserAmount) {
+                //     res.status(400).json({ message: 'insufficient chips' });
+                // } else {
+                    // const ans = await Payment.findByIdAndUpdate(userId,
+                    //     {
+                    //         amount: subtractChips(currentUserAmount, challengeAmount)
 
-                        },
-                        { new: true }
-                    );
+                    //     },
+                    //     { new: true }
+                    // );
                     const newResult = new Result({
                         user2: {
                             user2,
@@ -127,7 +127,7 @@ module.exports = (app) => {
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
                     res.status(200).json(newResult.user2);
 
-                }
+                // }
             }
         });
 
