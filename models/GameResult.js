@@ -9,14 +9,7 @@ const ResultSchema = new Schema({
 
             won: {
                 type: Boolean
-            },
-            lost: {
-                type: Boolean,
-            },
-            screenshots: {
-                type: String
-            },
-
+            }
         }
     ],
     user2: [
@@ -26,16 +19,10 @@ const ResultSchema = new Schema({
             },
             won: {
                 type: Boolean
-            },
-            lost: {
-                type: Boolean,
-            },
+            }
             
         }
     ],
-    screenshots: {
-        type: String
-    },
 
     challengeAmount: {
         type: Number

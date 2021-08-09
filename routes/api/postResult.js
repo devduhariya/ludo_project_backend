@@ -39,35 +39,35 @@ module.exports = (app) => {
     // User model
     // let User = require('../models/User');
     
-    app.post('/upload/:id', upload.single('screenshots'), (req, res, next) => {
-        const url = req.protocol + '://' + req.get('host')
-        const newResult = new Result({
-            screenshots: url + '/public/' + req.file.filename
-        });
-        newResult.save().then(result => {
-            res.status(201).json({
-                message: "User registered successfully!",
-                userCreated: {
-                    _id: result._id,
-                    screenshots: result.screenshots
-                }
-            })
-        }).catch(err => {
-            console.log(err),
-                res.status(500).json({
-                    error: err
-                });
-        })
-    })
+    // app.post('/upload/:id', upload.single('screenshots'), (req, res, next) => {
+    //     const url = req.protocol + '://' + req.get('host')
+    //     const newResult = new Result({
+    //         screenshots: url + '/public/' + req.file.filename
+    //     });
+    //     newResult.save().then(result => {
+    //         res.status(201).json({
+    //             message: "User registered successfully!",
+    //             userCreated: {
+    //                 _id: result._id,
+    //                 screenshots: result.screenshots
+    //             }
+    //         })
+    //     }).catch(err => {
+    //         console.log(err),
+    //             res.status(500).json({
+    //                 error: err
+    //             });
+    //     })
+    // })
     
-    app.get("/upload", (req, res, next) => {
-        Result.find().then(data => {
-            res.status(200).json({
-                message: "User list retrieved successfully!",
-                users: data
-            });
-        });
-    });
+    // app.get("/upload", (req, res, next) => {
+    //     Result.find().then(data => {
+    //         res.status(200).json({
+    //             message: "User list retrieved successfully!",
+    //             users: data
+    //         });
+    //     });
+    // });
 
 
 
@@ -83,9 +83,9 @@ module.exports = (app) => {
     }
     const TotalAmount = (a) => a + a
 
-    app.post('/api/result/:id', auth, upload.single('screenshots'), async (req, res) => {
+    app.post('/api/result/:id', auth, async (req, res) => {
         const id = req.params.id;
-        const url = req.protocol + '://' + req.get('host')
+        // const url = req.protocol + '://' + req.get('host')
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Challenge.findById({ _id: id })
 
@@ -116,7 +116,7 @@ module.exports = (app) => {
                         user2: {
                             user2,
                             won,
-                            screenshots: url + '/public/' + req.file.filename
+                            // screenshots: url + '/public/' + req.file.filename
                         },
 
                         challengeAmount: TotalAmount(challengeAmount)
@@ -133,10 +133,10 @@ module.exports = (app) => {
 
     });
 
-    app.put('/api/result/:id', auth, upload.single('screenshots'), async (req, res) => {
+    app.put('/api/result/:id', auth, async (req, res) => {
 
         const id = req.params.id;
-        const url = req.protocol + '://' + req.get('host');
+        // const url = req.protocol + '://' + req.get('host');
         const { won} = req.body
 
 
@@ -149,7 +149,7 @@ module.exports = (app) => {
                     user1: {
                         user1,
                         won,
-                        screenshots: url + '/public/' + req.file.filename
+                        // screenshots: url + '/public/' + req.file.filename
                     },
                 },
                 { new: true }
