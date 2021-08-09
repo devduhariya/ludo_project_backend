@@ -122,10 +122,10 @@ module.exports = (app) => {
                         challengeAmount: TotalAmount(challengeAmount)
 
                     });
-                    console.log(newResult);
+                    console.log(newResult.user2);
                     const GameResult = await newResult.save();
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json({ GameResult });
+                    res.status(200).json(newResult.user2);
 
                 }
             }
@@ -137,7 +137,7 @@ module.exports = (app) => {
 
         const id = req.params.id;
         // const url = req.protocol + '://' + req.get('host');
-        const { won} = req.body
+        const {won} = req.body
 
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
