@@ -20,9 +20,12 @@ const ResultSchema = new Schema({
             won: {
                 type: Boolean
             }
-            
+
         }
     ],
+    ChallengeId: {
+        type: ObjectID
+    },
 
     challengeAmount: {
         type: Number

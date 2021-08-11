@@ -122,10 +122,11 @@ module.exports = (app) => {
                         challengeAmount: TotalAmount(challengeAmount)
 
                     });
+                    newResult.ChallengeId = id
                     console.log(newResult.user2);
                     const GameResult = await newResult.save();
                     if (!GameResult) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json(newResult.user2);
+                    res.status(200).json(newResult);
 
                 // }
             }
@@ -143,7 +144,7 @@ module.exports = (app) => {
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Result.findById({ _id: id })
             const user1 = authData.user.ph
-            console.log("product", product.user1)
+            // console.log("product", product.user1)
             const result1 = await Result.findByIdAndUpdate(id,
                 {
                     user1: {
@@ -161,12 +162,12 @@ module.exports = (app) => {
     });
 
 
-    app.get('/api/results',auth, async (req, res) => {
-
+    app.get('/api/results/:id',auth, async (req, res) => {
+        const id = req.params.id;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             
             try {
-                const query = await Result.find();
+                const query = await Result.find({ChallengeId:id});
                 if (!query) throw Error('No queries');
 
                 res.status(200).json(query);
