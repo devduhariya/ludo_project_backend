@@ -291,7 +291,7 @@ module.exports = (app) => {
 
     const addWiningAmount = (a, b) => a + b
 
-    app.put('/api/result/winner/:id', auth, async (req, res) => {
+    app.get('/api/result/winner/:id', auth, async (req, res) => {
         const id = req.params.id;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             if (err) {
