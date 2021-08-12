@@ -177,7 +177,20 @@ module.exports = (app) => {
         });
     });
 
+    app.get('/api/allresults',auth, async (req, res) => {
+        // const id = req.params.id;
+        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            
+            try {
+                const query = await Result.find();
+                if (!query) throw Error('No queries');
 
+                res.status(200).json(query);
+            } catch (e) {
+                res.status(400).json({ msg: e.message });
+            }
+        });
+    });
 
 
 
@@ -287,6 +300,7 @@ module.exports = (app) => {
                 try {
 
                     const chips = await Result.findById(id);
+                    console.log('chips',chips)
                     const user1Number = chips.user1[0].user1
                     const user2Number = chips.user2[0].user2
                     const winingAmount = chips.challengeAmount;

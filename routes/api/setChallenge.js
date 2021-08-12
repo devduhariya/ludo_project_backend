@@ -181,18 +181,18 @@ module.exports = (app) => {
                     // if(findChallenge.status === "Accepted") {
                     //     await Challenge.findOneAndDelete(id);
                     // }
-                    const Admin = 7357525272
-                    let chips = await Payment.findOne({ paytm_no: Admin });
-                    let AdminId = chips._id
-                    const adminChips = chips.amount
-                    const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
-                        {
-                            amount: Totalchips(adminChips, challengeAmount, challengeAmount)
+                    // const Admin = 7357525272
+                    // let chips = await Payment.findOne({ paytm_no: Admin });
+                    // let AdminId = chips._id
+                    // const adminChips = chips.amount
+                    // const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
+                    //     {
+                    //         amount: Totalchips(adminChips, challengeAmount, challengeAmount)
 
-                        },
-                        { new: true }
-                    );
-                    res.json(addChipsToAdmin)
+                    //     },
+                    //     { new: true }
+                    // );
+                    // res.json(addChipsToAdmin)
 
                 }
             }
