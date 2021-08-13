@@ -23,7 +23,7 @@ module.exports = (app) => {
             cb(null, Date.now() + '-' + fileName)
         }
     });
-    
+
     var upload = multer({
         storage: storage,
         fileFilter: (req, file, cb) => {
@@ -35,10 +35,10 @@ module.exports = (app) => {
             }
         }
     });
-    
+
     // User model
     // let User = require('../models/User');
-    
+
     // app.post('/upload/:id', upload.single('screenshots'), (req, res, next) => {
     //     const url = req.protocol + '://' + req.get('host')
     //     const newResult = new Result({
@@ -59,7 +59,7 @@ module.exports = (app) => {
     //             });
     //     })
     // })
-    
+
     // app.get("/upload", (req, res, next) => {
     //     Result.find().then(data => {
     //         res.status(200).json({
@@ -96,7 +96,7 @@ module.exports = (app) => {
             // const userId = ans._id;
             let user2 = ans.paytm_no
             // const currentUserAmount = ans.amount
-            const { won} = req.body
+            const { won } = req.body
 
             if (err) {
                 res.sendStatus(403);
@@ -105,46 +105,46 @@ module.exports = (app) => {
                 // if (challengeAmount > currentUserAmount) {
                 //     res.status(400).json({ message: 'insufficient chips' });
                 // } else {
-                    // const ans = await Payment.findByIdAndUpdate(userId,
-                    //     {
-                    //         amount: subtractChips(currentUserAmount, challengeAmount)
+                // const ans = await Payment.findByIdAndUpdate(userId,
+                //     {
+                //         amount: subtractChips(currentUserAmount, challengeAmount)
 
-                    //     },
-                    //     { new: true }
-                    // );
-                    const newResult = new Result({
-                        user2: {
-                            user2,
-                            won,
-                            // screenshots: url + '/public/' + req.file.filename
-                        },
+                //     },
+                //     { new: true }
+                // );
+                const newResult = new Result({
+                    user2: {
+                        user2,
+                        won,
+                        // screenshots: url + '/public/' + req.file.filename
+                    },
 
-                        challengeAmount: TotalAmount(challengeAmount)
+                    challengeAmount: TotalAmount(challengeAmount)
 
-                    });
-                    newResult.ChallengeId = id
-                    console.log(newResult.user2);
-                    const GameResult = await newResult.save();
-                    if (!GameResult) throw Error('Something went wrong saving the challenge');
-                    res.status(200).json(newResult);
+                });
+                newResult.ChallengeId = id
+                console.log(newResult.user2);
+                const GameResult = await newResult.save();
+                if (!GameResult) throw Error('Something went wrong saving the challenge');
+                res.status(200).json(newResult);
 
                 // }
             }
         });
 
     });
-
+    const addWiningAmount = (a, b) => a + b
     app.put('/api/result/:id', auth, async (req, res) => {
 
         const id = req.params.id;
         // const url = req.protocol + '://' + req.get('host');
-        const {won} = req.body
+        const { won } = req.body
 
 
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
             const product = await Result.findById({ _id: id })
             const user1 = authData.user.ph
-            // console.log("product", product.user1)
+            console.log("product", product)
             const result1 = await Result.findByIdAndUpdate(id,
                 {
                     user1: {
@@ -157,17 +157,71 @@ module.exports = (app) => {
             );
             res.send(result1);
             // }
+
+            setTimeout(async()=>{
+                const chips = await Result.findById(id);
+                console.log('chips', chips)
+                const user1Number = chips.user1[0].user1
+                const user2Number = chips.user2[0].user2
+                const winingAmount = chips.challengeAmount;
+                const user1Status = chips.user1[0].won
+                // const user1Status = chips.user1[0].lost
+                const user2Status = chips.user2[0].won
+                // const user2Status = chips.user2[0].lost
+                if (user1Status == true && user2Status == false) {
+                    const chipsUserHave = await Payment.findOne({ paytm_no: user1Number })
+                    console.log("chipsUserHave", chipsUserHave)
+                    const existAmount = chipsUserHave.amount
+                    const UserOneTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user1Number },
+                        {
+                            amount: addWiningAmount(existAmount, winingAmount)
+                        },
+                        { new: true }
+                    );
+                    res.json(UserOneTotalAmount)
+                }
+                else if (user2Status == true && user1Status == false) {
+                    const chipsUserHave = await Payment.findOne({ paytm_no: user2Number })
+                    console.log("chipsUserHave", chipsUserHave)
+                    // const user2Id = chipsUserHave_id
+                    const existAmount = chipsUserHave.amount
+                    const UserTwoTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user2Number },
+                        {
+                            amount: addWiningAmount(existAmount, winingAmount)
+                        },
+                        { new: true }
+                    );
+                    // console.log("UserTwoTotalAmount", UserTwoTotalAmount)
+                    res.json(UserTwoTotalAmount)
+                }
+                else if (user2Status == true && user1Status == true || user2Status == false && user1Status == false) {
+                    const Admin = 7357525272
+                    let chips = await Payment.findOne({ paytm_no: Admin });
+                    let AdminId = chips._id
+                    const adminChips = chips.amount
+                    const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
+                        {
+                            amount: addWiningAmount(adminChips, winingAmount)
+
+                        },
+                        { new: true }
+                    );
+                    res.json(addChipsToAdmin)
+                }
+
+            }, 500);
+
         });
 
     });
 
 
-    app.get('/api/results/:id',auth, async (req, res) => {
+    app.get('/api/results/:id', auth, async (req, res) => {
         const id = req.params.id;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-            
+
             try {
-                const query = await Result.find({ChallengeId:id});
+                const query = await Result.find({ ChallengeId: id });
                 if (!query) throw Error('No queries');
 
                 res.status(200).json(query);
@@ -177,10 +231,10 @@ module.exports = (app) => {
         });
     });
 
-    app.get('/api/allresults',auth, async (req, res) => {
+    app.get('/api/allresults', auth, async (req, res) => {
         // const id = req.params.id;
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-            
+
             try {
                 const query = await Result.find();
                 if (!query) throw Error('No queries');
@@ -289,72 +343,72 @@ module.exports = (app) => {
 
 
 
-    const addWiningAmount = (a, b) => a + b
+    // const addWiningAmount = (a, b) => a + b
 
-    app.get('/api/result/winner/:id', auth, async (req, res) => {
-        const id = req.params.id;
-        jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
-            if (err) {
-                res.sendStatus(403);
-            } else {
-                try {
+    // app.get('/api/result/winner/:id', auth, async (req, res) => {
+    //     const id = req.params.id;
+    //     jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+    //         if (err) {
+    //             res.sendStatus(403);
+    //         } else {
+    //             try {
 
-                    const chips = await Result.findById(id);
-                    console.log('chips',chips)
-                    const user1Number = chips.user1[0].user1
-                    const user2Number = chips.user2[0].user2
-                    const winingAmount = chips.challengeAmount;
-                    const user1Status = chips.user1[0].won
-                    // const user1Status = chips.user1[0].lost
-                    const user2Status = chips.user2[0].won
-                    // const user2Status = chips.user2[0].lost
-                    if (user1Status ==true && user2Status ==false) {
-                        const chipsUserHave = await Payment.findOne({ paytm_no: user1Number })
-                        console.log("chipsUserHave", chipsUserHave)
-                        const existAmount = chipsUserHave.amount
-                        const UserOneTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user1Number },
-                            {
-                                amount: addWiningAmount(existAmount, winingAmount)
-                            },
-                            { new: true }
-                        );
-                        res.json(UserOneTotalAmount)
-                    }
-                    else if (user2Status == true && user1Status ==false) {
-                        const chipsUserHave = await Payment.findOne({ paytm_no: user2Number })
-                        console.log("chipsUserHave", chipsUserHave)
-                        // const user2Id = chipsUserHave_id
-                        const existAmount = chipsUserHave.amount
-                        const UserTwoTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user2Number },
-                            {
-                                amount: addWiningAmount(existAmount, winingAmount)
-                            },
-                            { new: true }
-                        );
-                        // console.log("UserTwoTotalAmount", UserTwoTotalAmount)
-                        res.json(UserTwoTotalAmount)
-                    }
-                    else if(user2Status ==true && user1Status ==true || user2Status == false && user1Status == false){
-                        const Admin = 7357525272
-                        let chips = await Payment.findOne({ paytm_no: Admin });
-                        let AdminId = chips._id
-                        const adminChips = chips.amount
-                        const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
-                            {
-                                amount: addWiningAmount(adminChips, winingAmount)
-    
-                            },
-                            { new: true }
-                        );
-                        res.json(addChipsToAdmin)
-                    }
+    //                 const chips = await Result.findById(id);
+    //                 console.log('chips',chips)
+    //                 const user1Number = chips.user1[0].user1
+    //                 const user2Number = chips.user2[0].user2
+    //                 const winingAmount = chips.challengeAmount;
+    //                 const user1Status = chips.user1[0].won
+    //                 // const user1Status = chips.user1[0].lost
+    //                 const user2Status = chips.user2[0].won
+    //                 // const user2Status = chips.user2[0].lost
+    //                 if (user1Status ==true && user2Status ==false) {
+    //                     const chipsUserHave = await Payment.findOne({ paytm_no: user1Number })
+    //                     console.log("chipsUserHave", chipsUserHave)
+    //                     const existAmount = chipsUserHave.amount
+    //                     const UserOneTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user1Number },
+    //                         {
+    //                             amount: addWiningAmount(existAmount, winingAmount)
+    //                         },
+    //                         { new: true }
+    //                     );
+    //                     res.json(UserOneTotalAmount)
+    //                 }
+    //                 else if (user2Status == true && user1Status ==false) {
+    //                     const chipsUserHave = await Payment.findOne({ paytm_no: user2Number })
+    //                     console.log("chipsUserHave", chipsUserHave)
+    //                     // const user2Id = chipsUserHave_id
+    //                     const existAmount = chipsUserHave.amount
+    //                     const UserTwoTotalAmount = await Payment.findOneAndUpdate({ paytm_no: user2Number },
+    //                         {
+    //                             amount: addWiningAmount(existAmount, winingAmount)
+    //                         },
+    //                         { new: true }
+    //                     );
+    //                     // console.log("UserTwoTotalAmount", UserTwoTotalAmount)
+    //                     res.json(UserTwoTotalAmount)
+    //                 }
+    //                 else if(user2Status ==true && user1Status ==true || user2Status == false && user1Status == false){
+    //                     const Admin = 7357525272
+    //                     let chips = await Payment.findOne({ paytm_no: Admin });
+    //                     let AdminId = chips._id
+    //                     const adminChips = chips.amount
+    //                     const addChipsToAdmin = await Payment.findByIdAndUpdate(AdminId,
+    //                         {
+    //                             amount: addWiningAmount(adminChips, winingAmount)
+
+    //                         },
+    //                         { new: true }
+    //                     );
+    //                     res.json(addChipsToAdmin)
+    //                 }
 
 
-                } catch (e) {
-                    res.status(400).json({ msg: e.message });
-                }
-            }
-        });
-    });
+    //             } catch (e) {
+    //                 res.status(400).json({ msg: e.message });
+    //             }
+    //         }
+    //     });
+    // });
 
 }
