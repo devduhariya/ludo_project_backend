@@ -50,6 +50,7 @@ module.exports = (app) => {
         }
         // console.log("reeq body",req.body)
         jwt.verify(req.token, JWT_SECRET, async (err, authData) => {
+            
             if (err) {
                 res.sendStatus(403);
             } else {
@@ -60,6 +61,7 @@ module.exports = (app) => {
                         amount
                     });
                     newPayment.status = "pending"
+                    
                     const payment = await newPayment.save();
                     console.log("New Paymewnt", newPayment)
                     if (!payment) throw Error('error while saving payment');
@@ -97,6 +99,7 @@ module.exports = (app) => {
         if (product.status === 'pending') {
             let chips = await Payment.findOne({ paytm_no: product.paytm_no });
             console.log("chips", chips)
+            // const username = chips.name
             if (chips.status === "pending") {
                 const chipsId = chips._id;
                 let existAmount = 0;
@@ -111,10 +114,12 @@ module.exports = (app) => {
                 const result1 = await Payment.findByIdAndUpdate(chipsId,
                     {
                         amount: AddAmount(existAmount, amount)
+                        // name : username
                     },
                     { new: true }
                 );
                 res.send(result1);
+                await Payment.deleteOne({ _id: id });
             }
             else{
                 const chipsId = chips._id;
@@ -134,7 +139,7 @@ module.exports = (app) => {
                     { new: true }
                 );
                 res.send(result1);
-
+                await Payment.deleteOne({ _id: id });
             }
 
         } else {
@@ -145,7 +150,7 @@ module.exports = (app) => {
         const id = req.params.id;
         const product = await Payment.findById({ _id: id })
         if (product) {
-            await Payment.deleteOne({ _id: id });
+           
             res.status(200).send({ message: 'request removed' });
         } else {
             res.status(400).send({ message: "no request" })
