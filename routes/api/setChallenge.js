@@ -118,7 +118,8 @@ module.exports = (app) => {
                     if (!challenge) throw Error('Something went wrong saving the challenge');
                     res.status(200).json({ challenge, ans });
                 } else {
-                    res.status(400).json({ message: "you don't have sufficient chips" })
+                    // res.status(400).json({ message: "you don't have sufficient chips" })
+                    res.json({message:"insufficient chips"})
                 }
             }
         });
